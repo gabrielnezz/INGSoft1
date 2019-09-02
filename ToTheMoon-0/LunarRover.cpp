@@ -13,6 +13,8 @@ void LunarRover::obtenerTipoSuelo() {
 
     if(this->durezaSuelo < 100) {
         this->sueloActual = polvo;
+    } else if(this->durezaSuelo < 300){
+        this->sueloActual = intermedio;
     } else {
         this->sueloActual = piedra;
     }

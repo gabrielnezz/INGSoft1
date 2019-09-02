@@ -3,7 +3,8 @@
 
 enum tipoSuelo {
     piedra = 1,
-    polvo = 2
+    intermedio = 2,
+    polvo = 3
 };
 
 #endif //TP1_TIPOSUELO_H
