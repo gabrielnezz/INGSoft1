@@ -53,21 +53,18 @@ test01AddingCustomerShouldNotTakeMoreThan50Milliseconds
 	
 ! !
 
-!CustomerBookTest methodsFor: 'testing' stamp: 'a 9/2/2019 20:28:54'!
+!CustomerBookTest methodsFor: 'testing' stamp: 'g j 9/8/2019 18:26:03'!
 test02RemovingCustomerShouldNotTakeMoreThan100Milliseconds
 
-	| customerBook millisecondsBeforeRunning millisecondsAfterRunning paulMcCartney |
+	| customerBook paulMcCartney |
 	
 	customerBook := CustomerBook new.
 	paulMcCartney := 'Paul McCartney'.
 	
 	customerBook addCustomerNamed: paulMcCartney.
-	  
-	millisecondsBeforeRunning := Time millisecondClockValue * millisecond.
-	customerBook removeCustomerNamed: paulMcCartney.
-	millisecondsAfterRunning := Time millisecondClockValue * millisecond.
 	
-	self assert: (millisecondsAfterRunning-millisecondsBeforeRunning) < (100 * millisecond)
+	self spentLessTimeThan: [customerBook removeCustomerNamed: paulMcCartney] amountOfTime: 100.
+	
 	
 ! !
 
@@ -250,13 +247,6 @@ active remove: aName ifAbsent: [suspended remove: aName ifAbsent:[^NotFound sign
 
 ^aName.
 ! !
-
-!CustomerBook methodsFor: 'customer management' stamp: 'a 9/2/2019 20:32:16'!
-searchAndErase: aNameToDelete collection: aCollectionToIntervine 
-
-aCollectionToIntervine remove: aNameToDelete ifAbsent: [^''].
-
-^aNameToDelete.! !
 
 !CustomerBook methodsFor: 'customer management' stamp: 'HernanWilkinson 7/6/2011 17:52'!
 signalCustomerAlreadyExists 
