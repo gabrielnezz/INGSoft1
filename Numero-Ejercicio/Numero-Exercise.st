@@ -379,20 +379,27 @@ Numero subclass: #Entero
 - aSubtrahend 
 	^ aSubtrahend restaEntera: self.! !
 
-!Entero methodsFor: 'arithmetic operations' stamp: 'g j 9/15/2019 14:54:53'!
+!Entero methodsFor: 'arithmetic operations' stamp: 'g j 9/16/2019 14:18:03'!
 / aDivisor 
-	| newDenominator newNumerator |
-	aDivisor class = Entero ifTrue: [^Fraccion with: self over: aDivisor] 
-	ifFalse: [newNumerator := self * aDivisor denominator.
-		newDenominator := aDivisor numerator.
-		^Fraccion with: newNumerator over: newDenominator.] 
-	
+
+^aDivisor divisionEntera: self.
 	! !
 
 !Entero methodsFor: 'arithmetic operations' stamp: 'HernanWilkinson 5/7/2016 21:55'!
 // aDivisor 
 	
 	^self class with: value // aDivisor integerValue! !
+
+!Entero methodsFor: 'arithmetic operations' stamp: 'g j 9/16/2019 11:18:49'!
+divisionEntera: unEntero
+	^Fraccion with: unEntero over: self
+	! !
+
+!Entero methodsFor: 'arithmetic operations' stamp: 'g j 9/16/2019 11:28:14'!
+divisionFraccionaria: unaFraccion
+				
+	^Fraccion with: unaFraccion numerator over: (unaFraccion denominator * self)
+	! !
 
 !Entero methodsFor: 'arithmetic operations' stamp: 'HAW 9/24/2018 08:47:50'!
 fibonacci
@@ -536,14 +543,18 @@ Numero subclass: #Fraccion
 ^ aSubtrahend restaFraccionaria: self
 ! !
 
-!Fraccion methodsFor: 'arithmetic operations' stamp: 'g j 9/15/2019 14:58:42'!
+!Fraccion methodsFor: 'arithmetic operations' stamp: 'g j 9/16/2019 11:25:49'!
 / aDivisor 
-
-	| newDenominator |
-	aDivisor class = Entero ifTrue: [newDenominator := denominator * aDivisor.
-		^numerator / newDenominator] 
-	ifFalse: [^(numerator * aDivisor denominator) / (denominator * aDivisor numerator).]	
+^ aDivisor divisionFraccionaria: self.
 	! !
+
+!Fraccion methodsFor: 'arithmetic operations' stamp: 'g j 9/16/2019 11:30:53'!
+divisionEntera: unEntero
+	^(unEntero * denominator) / numerator.! !
+
+!Fraccion methodsFor: 'arithmetic operations' stamp: 'g j 9/16/2019 11:25:09'!
+divisionFraccionaria: unaFraccion
+	^Fraccion with: unaFraccion numerator * denominator over: numerator * unaFraccion denominator.! !
 
 !Fraccion methodsFor: 'arithmetic operations' stamp: 'g j 9/16/2019 10:04:24'!
 multiplicacionEntera: unEntero
