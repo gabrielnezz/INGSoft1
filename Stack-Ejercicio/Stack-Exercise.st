@@ -35,14 +35,13 @@ test03PopRemovesElementsFromTheStack
 	
 	self assert: stack isEmpty! !
 
-!OOStackTest methodsFor: 'test' stamp: 'a 9/16/2019 20:45:59'!
+!OOStackTest methodsFor: 'test' stamp: 'db 9/17/2019 18:23:35'!
 test04PopReturnsLastPushedObject
 
 	| stack pushedObject |
 	
 	stack := OOStack new.
 	pushedObject := 'Something'.
-	self halt
 	stack push: pushedObject.	
 	self assert: stack pop = pushedObject! !
 
@@ -145,115 +144,131 @@ TestCase subclass: #SentenceFinderByPrefixTest
 	category: 'Stack-Exercise'!
 
 
-!classDefinition: #Actual category: #'Stack-Exercise'!
-Object subclass: #Actual
-	instanceVariableNames: 'stack'
+!classDefinition: #ElementoEncapsulador category: #'Stack-Exercise'!
+Object subclass: #ElementoEncapsulador
+	instanceVariableNames: 'indice'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Stack-Exercise'!
 
-!Actual methodsFor: 'as yet unclassified' stamp: 'a 9/16/2019 20:50:02'!
-pop 
-^self subclassResponsibility ! !
+!ElementoEncapsulador methodsFor: 'as yet unclassified' stamp: 'db 9/17/2019 19:19:44'!
+dameElElementoEncapsuladorAnterior
+^ self subclassResponsibility.! !
 
-!Actual methodsFor: 'as yet unclassified' stamp: 'a 9/16/2019 20:50:31'!
-popFrom: aStack
+!ElementoEncapsulador methodsFor: 'as yet unclassified' stamp: 'db 9/17/2019 19:03:24'!
+dameIndice
+^indice! !
+
+!ElementoEncapsulador methodsFor: 'as yet unclassified' stamp: 'db 9/17/2019 19:37:37'!
+dameObjetoAsociado
 ^self subclassResponsibility ! !
 
 
-!classDefinition: #ActualNoVacio category: #'Stack-Exercise'!
-Actual subclass: #ActualNoVacio
-	instanceVariableNames: 'objetoAsociado'
+!classDefinition: #ElementoEncapsuladorNoVacio category: #'Stack-Exercise'!
+ElementoEncapsulador subclass: #ElementoEncapsuladorNoVacio
+	instanceVariableNames: 'objetoAsociado elementoEncapsuladorAnterior'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Stack-Exercise'!
 
-!ActualNoVacio methodsFor: 'as yet unclassified' stamp: 'a 9/16/2019 20:55:49'!
-asociar: anObject
-objetoAsociado := anObject! !
+!ElementoEncapsuladorNoVacio methodsFor: 'as yet unclassified' stamp: 'db 9/17/2019 19:15:18'!
+crearConObjectoAsociado: unObjecto yElementoEncapsuladorAnterior: unElementoEncapsulador
+objetoAsociado  := unObjecto .
+elementoEncapsuladorAnterior  := unElementoEncapsulador.
+indice := (unElementoEncapsulador dameIndice) + 1 ! !
 
-!ActualNoVacio methodsFor: 'as yet unclassified' stamp: 'a 9/16/2019 20:44:14'!
-pop
-stack actualizaActual.
-^stack popear.
-! !
+!ElementoEncapsuladorNoVacio methodsFor: 'as yet unclassified' stamp: 'db 9/17/2019 19:17:46'!
+dameElElementoEncapsuladorAnterior
+^elementoEncapsuladorAnterior ! !
 
-!ActualNoVacio methodsFor: 'as yet unclassified' stamp: 'a 9/16/2019 20:51:52'!
-popFrom: aStack
-aStack actualizaActual.
-^aStack popear.
-! !
+!ElementoEncapsuladorNoVacio methodsFor: 'as yet unclassified' stamp: 'db 9/17/2019 19:20:23'!
+dameObjetoAsociado
+^objetoAsociado ! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'ElementoEncapsuladorNoVacio class' category: #'Stack-Exercise'!
+ElementoEncapsuladorNoVacio class
+	instanceVariableNames: ''!
+
+!ElementoEncapsuladorNoVacio class methodsFor: 'as yet unclassified' stamp: 'db 9/17/2019 19:32:52'!
+crearConObjectoAsociado: unObjectoAAsociar yElementoEncapsuladorAnterior: unElementoEncapsulador
+|nuevoElementoEncapsulador|
+nuevoElementoEncapsulador  := ElementoEncapsuladorNoVacio new crearConObjectoAsociado: unObjectoAAsociar  yElementoEncapsuladorAnterior: unElementoEncapsulador.
+^nuevoElementoEncapsulador.! !
 
 
-!classDefinition: #ActualVacio category: #'Stack-Exercise'!
-Actual subclass: #ActualVacio
+!classDefinition: #ElementoEncapsuladorVacio category: #'Stack-Exercise'!
+ElementoEncapsulador subclass: #ElementoEncapsuladorVacio
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Stack-Exercise'!
 
-!ActualVacio methodsFor: 'as yet unclassified' stamp: 'a 9/16/2019 19:59:05'!
-pop
-^stack error: OOStack stackEmptyErrorDescription! !
+!ElementoEncapsuladorVacio methodsFor: 'as yet unclassified' stamp: 'db 9/17/2019 19:19:30'!
+dameElElementoEncapsuladorAnterior
+^self error: OOStack stackEmptyErrorDescription.! !
 
-!ActualVacio methodsFor: 'as yet unclassified' stamp: 'a 9/16/2019 20:50:44'!
-popFrom: aStack
-^stack error: OOStack stackEmptyErrorDescription! !
+!ElementoEncapsuladorVacio methodsFor: 'as yet unclassified' stamp: 'db 9/17/2019 19:37:59'!
+dameObjetoAsociado
+^self error: OOStack stackEmptyErrorDescription ! !
+
+!ElementoEncapsuladorVacio methodsFor: 'as yet unclassified' stamp: 'db 9/17/2019 19:15:49'!
+initialize
+indice := 0! !
 
 
 !classDefinition: #OOStack category: #'Stack-Exercise'!
 Object subclass: #OOStack
-	instanceVariableNames: 'stack actual'
+	instanceVariableNames: 'elementoEncapsuladorActual'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Stack-Exercise'!
 
-!OOStack methodsFor: 'initialization' stamp: 'a 9/16/2019 20:58:15'!
+!OOStack methodsFor: 'initialization' stamp: 'db 9/17/2019 19:06:52'!
 initialize
-|actualVacio|
+elementoEncapsuladorActual := ElementoEncapsuladorVacio new.
+
+"""
 stack:= OrderedCollection new.
 stack add: ActualVacio new.
-actual asociar: stack first! !
+elementoActual := ActualNoVacio new.
+elementoActual reasociarCon: stack first"""! !
 
 
-!OOStack methodsFor: 'as yet unclassified' stamp: 'a 9/16/2019 20:56:58'!
-actualizaActual
-
-actual asociar:(stack at:2)! !
-
-!OOStack methodsFor: 'as yet unclassified' stamp: 'a 9/16/2019 20:35:50'!
+!OOStack methodsFor: 'as yet unclassified' stamp: 'db 9/17/2019 19:16:25'!
 isEmpty
 
-^stack size = 1 .! !
+^elementoEncapsuladorActual dameIndice  = 0! !
 
-!OOStack methodsFor: 'as yet unclassified' stamp: 'a 9/16/2019 20:51:33'!
+!OOStack methodsFor: 'as yet unclassified' stamp: 'db 9/17/2019 19:35:51'!
 pop
-actual popFrom: self
-"""stack isEmpty ifTrue: [^self error: OOStack stackEmptyErrorDescription].
+	|elementoAEliminar|
+	elementoAEliminar := elementoEncapsuladorActual.
+	elementoEncapsuladorActual := elementoEncapsuladorActual dameElElementoEncapsuladorAnterior.
+	^elementoAEliminar dameObjetoAsociado.
+	"""stack isEmpty ifTrue: [^self error: OOStack stackEmptyErrorDescription].
 
-^stack removeFirst.
-"""! !
+	^stack removeFirst.
+	"""! !
 
-!OOStack methodsFor: 'as yet unclassified' stamp: 'a 9/16/2019 20:28:39'!
-popear 
-^stack removeFirst! !
-
-!OOStack methodsFor: 'as yet unclassified' stamp: 'a 9/16/2019 20:56:01'!
+!OOStack methodsFor: 'as yet unclassified' stamp: 'db 9/17/2019 19:36:00'!
 push: anObjectToBePushed
+	|nuevoElemento|
+	nuevoElemento := ElementoEncapsuladorNoVacio crearConObjectoAsociado: anObjectToBePushed yElementoEncapsuladorAnterior: elementoEncapsuladorActual.
+	elementoEncapsuladorActual :=nuevoElemento 
+	
+	
+	"""elementoActual reasociarCon: anObjectToBePushed"""! !
 
-stack addFirst: anObjectToBePushed.
-actual asociar: anObjectToBePushed! !
-
-!OOStack methodsFor: 'as yet unclassified' stamp: 'a 9/16/2019 20:16:29'!
+!OOStack methodsFor: 'as yet unclassified' stamp: 'db 9/17/2019 19:36:05'!
 size
 
-^stack size.! !
+	^elementoEncapsuladorActual  dameIndice! !
 
-!OOStack methodsFor: 'as yet unclassified' stamp: 'a 9/16/2019 19:26:06'!
+!OOStack methodsFor: 'as yet unclassified' stamp: 'db 9/17/2019 19:36:42'!
 top
-stack isEmpty ifTrue: [^self error: OOStack stackEmptyErrorDescription].
-
-^stack first.! !
+^elementoEncapsuladorActual dameObjetoAsociado! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
