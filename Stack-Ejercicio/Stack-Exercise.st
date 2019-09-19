@@ -382,10 +382,10 @@ verificarQueElStackNoSeaVacio: unStack
 SentenceFinderByPrefix class
 	instanceVariableNames: ''!
 
-!SentenceFinderByPrefix class methodsFor: 'as yet unclassified' stamp: 'd b 9/18/2019 22:58:36'!
+!SentenceFinderByPrefix class methodsFor: 'error descriptions' stamp: 'd b 9/18/2019 22:58:36'!
 ErrorDeStackVacio
 ^'El stack no puede ser vacio'! !
 
-!SentenceFinderByPrefix class methodsFor: 'as yet unclassified' stamp: 'd b 9/18/2019 21:04:42'!
+!SentenceFinderByPrefix class methodsFor: 'error descriptions' stamp: 'd b 9/18/2019 21:04:42'!
 PrefixError
 ^'El prefijo no puede ser vacio o contener espacios'! !
