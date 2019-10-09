@@ -18,7 +18,7 @@ assertHeadingIsValid: aHeading
 assertValueIsANumber: aValue
 	self assert: aValue class = SmallInteger! !
 
-!MarsRoverTest methodsFor: 'tests' stamp: 'g j 10/7/2019 09:35:30'!
+!MarsRoverTest methodsFor: 'tests' stamp: 'db 10/9/2019 18:47:01'!
 test01newMarsRoverMustHaveValidCoordinates
 	|marsRover x y|
 	marsRover := MarsRover withX: 0 andY: 0 andHeading: $N.
@@ -188,9 +188,10 @@ Object subclass: #Coordinate
 
 ! !
 
-!Coordinate methodsFor: 'as yet unclassified' stamp: 'db 10/6/2019 17:19:09'!
+!Coordinate methodsFor: 'as yet unclassified' stamp: 'db 10/9/2019 18:26:10'!
 checkAValue: aValue and: anotherValue
-	(aValue class = SmallInteger) ifTrue: [(anotherValue class) = SmallInteger ifTrue: [^true.]]! !
+	(aValue class = SmallInteger) ifTrue: [(anotherValue class) = SmallInteger ifTrue: [^true.]].
+	^false.! !
 
 !Coordinate methodsFor: 'as yet unclassified' stamp: 'db 10/6/2019 17:30:17'!
 newWithX: aValue andY: anotherValue
@@ -229,7 +230,7 @@ Object subclass: #HandlerMovement
 	poolDictionaries: ''
 	category: '21-MarsRover'!
 
-!HandlerMovement methodsFor: 'as yet unclassified' stamp: 'db 10/6/2019 17:16:04'!
+!HandlerMovement methodsFor: 'as yet unclassified' stamp: 'db 10/9/2019 18:39:16'!
 checkValidHeading: aHeading
 	^('NSEO' includes: aHeading)! !
 
@@ -240,16 +241,6 @@ do
 !HandlerMovement methodsFor: 'as yet unclassified' stamp: 'db 10/6/2019 17:11:32'!
 heading
 	^self subclassResponsibility .! !
-
-!HandlerMovement methodsFor: 'as yet unclassified' stamp: 'db 10/6/2019 17:21:19'!
-initializeWithHeading: aHeading
-	|aHeadingUppercase|
-	aHeadingUppercase := aHeading asUppercase.
-	(self checkValidHeading: aHeadingUppercase) ifFalse: [^ self InvalidHeading ].
-	(aHeadingUppercase = $O) ifTrue: [^LeftMovement new].
-	(aHeadingUppercase = $N) ifTrue: [^UpMovement new].
-	(aHeadingUppercase = $S) ifTrue: [^DownMovement new].
-	(aHeadingUppercase = $E) ifTrue: [^RightMovement new].! !
 
 !HandlerMovement methodsFor: 'as yet unclassified' stamp: 'db 10/6/2019 17:07:05'!
 rotateLeft
@@ -263,15 +254,34 @@ rotateRight
 
 !classDefinition: 'HandlerMovement class' category: #'21-MarsRover'!
 HandlerMovement class
-	instanceVariableNames: ''!
+	instanceVariableNames: 'uniqueInstance'!
 
 !HandlerMovement class methodsFor: 'as yet unclassified' stamp: 'db 10/6/2019 17:16:21'!
 InvalidHeading
 	^self error: 'Invalid heading'! !
 
-!HandlerMovement class methodsFor: 'as yet unclassified' stamp: 'g j 10/7/2019 09:42:16'!
+!HandlerMovement class methodsFor: 'as yet unclassified' stamp: 'db 10/9/2019 18:39:53'!
+checkValidHeading: aHeading
+	^('NSEO' includes: aHeading)! !
+
+!HandlerMovement class methodsFor: 'as yet unclassified' stamp: 'db 10/9/2019 18:54:11'!
+initializeWithHeading: aHeading
+
+	|aHeadingUppercase|
+	aHeadingUppercase := aHeading asUppercase.
+	(self checkValidHeading: aHeadingUppercase) ifFalse: [^ self InvalidHeading ].
+	(aHeadingUppercase = $O) ifTrue: [^LeftMovement new].
+	(aHeadingUppercase = $N) ifTrue: [^UpMovement new].
+	(aHeadingUppercase = $S) ifTrue: [^DownMovement new].
+	(aHeadingUppercase = $E) ifTrue: [^RightMovement new].! !
+
+!HandlerMovement class methodsFor: 'as yet unclassified' stamp: 'db 10/9/2019 18:31:51'!
+new
+	^self subclassResponsibility ! !
+
+!HandlerMovement class methodsFor: 'as yet unclassified' stamp: 'db 10/9/2019 18:28:52'!
 withHeading: aHeading
-	^self new initializeWithHeading: aHeading.! !
+	^self initializeWithHeading: aHeading.! !
 
 
 !classDefinition: #DownMovement category: #'21-MarsRover'!
@@ -296,6 +306,17 @@ rotateLeft
 !DownMovement methodsFor: 'as yet unclassified' stamp: 'db 10/6/2019 17:53:25'!
 rotateRight
 	^LeftMovement new.! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'DownMovement class' category: #'21-MarsRover'!
+DownMovement class
+	instanceVariableNames: ''!
+
+!DownMovement class methodsFor: 'as yet unclassified' stamp: 'db 10/9/2019 18:46:14'!
+new
+	uniqueInstance ifNil: [uniqueInstance := self basicNew initialize].
+       ^uniqueInstance ! !
 
 
 !classDefinition: #LeftMovement category: #'21-MarsRover'!
@@ -322,6 +343,17 @@ rotateRight
 	^UpMovement new.
 	! !
 
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'LeftMovement class' category: #'21-MarsRover'!
+LeftMovement class
+	instanceVariableNames: ''!
+
+!LeftMovement class methodsFor: 'as yet unclassified' stamp: 'db 10/9/2019 18:54:19'!
+new
+	uniqueInstance ifNil: [uniqueInstance := self basicNew initialize].
+       ^uniqueInstance ! !
+
 
 !classDefinition: #RightMovement category: #'21-MarsRover'!
 HandlerMovement subclass: #RightMovement
@@ -345,6 +377,17 @@ rotateLeft
 !RightMovement methodsFor: 'as yet unclassified' stamp: 'db 10/6/2019 17:05:40'!
 rotateRight
 	^DownMovement new.! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'RightMovement class' category: #'21-MarsRover'!
+RightMovement class
+	instanceVariableNames: ''!
+
+!RightMovement class methodsFor: 'as yet unclassified' stamp: 'db 10/9/2019 18:32:28'!
+new
+	uniqueInstance ifNil: [uniqueInstance := self basicNew initialize].
+       ^uniqueInstance ! !
 
 
 !classDefinition: #UpMovement category: #'21-MarsRover'!
@@ -370,6 +413,17 @@ rotateLeft
 rotateRight
 	^RightMovement new.
 	! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'UpMovement class' category: #'21-MarsRover'!
+UpMovement class
+	instanceVariableNames: ''!
+
+!UpMovement class methodsFor: 'as yet unclassified' stamp: 'db 10/9/2019 18:48:26'!
+new
+	uniqueInstance ifNil: [uniqueInstance := self basicNew initialize].
+       ^uniqueInstance ! !
 
 
 !classDefinition: #MarsRover category: #'21-MarsRover'!
@@ -427,6 +481,10 @@ MarsRover class
 !MarsRover class methodsFor: 'as yet unclassified' stamp: 'db 10/6/2019 16:45:22'!
 InvalidCommand
 	^self error: 'Invalid Command'! !
+
+!MarsRover class methodsFor: 'as yet unclassified' stamp: 'db 10/6/2019 14:09:32'!
+initializeWithX: xValue andY: yValue andHeading: aHeading
+	^(self new) initializeWithX: xValue andY: yValue andHeading: aHeading.! !
 
 !MarsRover class methodsFor: 'as yet unclassified' stamp: 'g j 10/7/2019 09:40:59'!
 withX: xValue andY: yValue andHeading: aHeading
