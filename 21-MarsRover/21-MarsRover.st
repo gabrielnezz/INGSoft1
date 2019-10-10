@@ -18,52 +18,52 @@ assertHeadingIsValid: aHeading
 assertValueIsANumber: aValue
 	self assert: aValue class = SmallInteger! !
 
-!MarsRoverTest methodsFor: 'tests' stamp: 'db 10/6/2019 14:11:15'!
+!MarsRoverTest methodsFor: 'tests' stamp: 'db 10/9/2019 18:47:01'!
 test01newMarsRoverMustHaveValidCoordinates
 	|marsRover x y|
-	marsRover := MarsRover initializeWithX: 0 andY: 0 andHeading: $N.
+	marsRover := MarsRover withX: 0 andY: 0 andHeading: $N.
 	x := (marsRover xCoordinates).
 	self assertValueIsANumber: x.
 	y := (marsRover yCoordinates).
 	self assertValueIsANumber: y.! !
 
-!MarsRoverTest methodsFor: 'tests' stamp: 'db 10/6/2019 17:17:24'!
+!MarsRoverTest methodsFor: 'tests' stamp: 'g j 10/7/2019 09:35:37'!
 test02newMarsRoverMustHaveValidHeading
 	|marsRover heading|
-	marsRover := MarsRover initializeWithX: 0 andY: 0 andHeading: $N.
+	marsRover := MarsRover withX: 0 andY: 0 andHeading: $N.
 	heading := marsRover heading.
 	self assertHeadingIsValid: heading! !
 
-!MarsRoverTest methodsFor: 'tests' stamp: 'db 10/6/2019 14:24:56'!
+!MarsRoverTest methodsFor: 'tests' stamp: 'g j 10/7/2019 09:36:04'!
 test03newMarsRoverCantHaveInvalidCoordinates
 	|marsRover|
-	self should: [marsRover := MarsRover initializeWithX: 5 andY: $d andHeading: $N.]
+	self should: [marsRover := MarsRover withX: 5 andY: $d andHeading: $N.]
 		raise: Error. 
 
-	self should: [marsRover := MarsRover initializeWithX: $a andY: 5 andHeading: $N.]
+	self should: [marsRover := MarsRover withX: $a andY: 5 andHeading: $N.]
 		raise: Error. 
 			
-	self should: [marsRover := MarsRover initializeWithX: $a andY: $d andHeading: $N.]
+	self should: [marsRover := MarsRover withX: $a andY: $d andHeading: $N.]
 		raise: Error. 
 			! !
 
-!MarsRoverTest methodsFor: 'tests' stamp: 'db 10/6/2019 14:28:52'!
+!MarsRoverTest methodsFor: 'tests' stamp: 'g j 10/7/2019 09:37:23'!
 test04newMarsRoverCantHaveInvalidHeading
-	self should: [MarsRover initializeWithX: 5 andY: 1 andHeading: $f]
+	self should: [MarsRover withX: 5 andY: 1 andHeading: $f]
 		raise: Error.
 		
 	! !
 
-!MarsRoverTest methodsFor: 'tests' stamp: 'db 10/6/2019 15:45:41'!
+!MarsRoverTest methodsFor: 'tests' stamp: 'g j 10/7/2019 09:37:30'!
 test05newMarsRoverHeadingIsNotCaseSensitive
 	|marsRover|
-	marsRover :=  MarsRover initializeWithX: 5 andY: 10 andHeading: $n.
+	marsRover :=  MarsRover withX: 5 andY: 10 andHeading: $n.
 	self assert: true.! !
 
-!MarsRoverTest methodsFor: 'tests' stamp: 'db 10/6/2019 17:31:35'!
+!MarsRoverTest methodsFor: 'tests' stamp: 'g j 10/7/2019 09:37:56'!
 test06marsRoverWithHeadingNorthWithForwardCommandMustHaveSameXCordinateAndOneUnitMoreInYCoordinate
 	|marsRover comandos oldXCoordinate oldYCoordinate|
-	marsRover := MarsRover initializeWithX: 0 andY: 0 andHeading: $N.
+	marsRover := MarsRover withX: 0 andY: 0 andHeading: $N.
 	comandos := 'f'.
 	oldXCoordinate := marsRover xCoordinates.
 	oldYCoordinate  := marsRover yCoordinates.
@@ -71,10 +71,10 @@ test06marsRoverWithHeadingNorthWithForwardCommandMustHaveSameXCordinateAndOneUni
 	self assert: (marsRover yCoordinates) = (1 + oldYCoordinate ).
 	self assert: (marsRover xCoordinates) = (oldXCoordinate ). ! !
 
-!MarsRoverTest methodsFor: 'tests' stamp: 'db 10/6/2019 17:33:09'!
+!MarsRoverTest methodsFor: 'tests' stamp: 'g j 10/7/2019 09:38:03'!
 test07marsRoverWithHeadingNorthWithBackCommandMustHaveSameXCoordinateAndOneUnitMinusInYCoordinate
 	|marsRover comandos oldXCoordinate oldYCoordinate|
-	marsRover := MarsRover initializeWithX: 0 andY: 0 andHeading: $N.
+	marsRover := MarsRover withX: 0 andY: 0 andHeading: $N.
 	comandos := 'b'.
 	oldXCoordinate := marsRover xCoordinates.
 	oldYCoordinate  := marsRover yCoordinates.
@@ -82,26 +82,26 @@ test07marsRoverWithHeadingNorthWithBackCommandMustHaveSameXCoordinateAndOneUnitM
 	self assert: (marsRover yCoordinates) = (oldYCoordinate - 1 ).
 	self assert: (marsRover xCoordinates) = (oldXCoordinate ). ! !
 
-!MarsRoverTest methodsFor: 'tests' stamp: 'db 10/6/2019 17:39:49'!
+!MarsRoverTest methodsFor: 'tests' stamp: 'g j 10/7/2019 09:38:11'!
 test08marsRoverWithNorthHeadingWithRCommandNewHeadingIsEast
 	|marsRover comandos|
-	marsRover := MarsRover initializeWithX: 0 andY: 0 andHeading: $N.
+	marsRover := MarsRover withX: 0 andY: 0 andHeading: $N.
 	comandos := 'r'.
 	marsRover executeCommands: comandos.
 	self assert: (marsRover heading) = ($E).! !
 
-!MarsRoverTest methodsFor: 'tests' stamp: 'db 10/6/2019 17:40:53'!
+!MarsRoverTest methodsFor: 'tests' stamp: 'g j 10/7/2019 09:38:20'!
 test09marsRoverWithSouthHeadingWithICommandNewHeadingIsEast
 	|marsRover comandos|
-	marsRover := MarsRover initializeWithX: 0 andY: 0 andHeading: $S.
+	marsRover := MarsRover withX: 0 andY: 0 andHeading: $S.
 	comandos := 'I'.
 	marsRover executeCommands: comandos.
 	self assert: (marsRover heading) = ($E).! !
 
-!MarsRoverTest methodsFor: 'tests' stamp: 'db 10/6/2019 17:42:19'!
+!MarsRoverTest methodsFor: 'tests' stamp: 'g j 10/7/2019 09:38:26'!
 test10marsRoverWithHeadingWestWithFCommandMustHaveSameYCoordinateAndOneUnitMinusInXCoordinate
 	|marsRover comandos oldXCoordinate oldYCoordinate|
-	marsRover := MarsRover initializeWithX: 0 andY: 0 andHeading: $O.
+	marsRover := MarsRover withX: 0 andY: 0 andHeading: $O.
 	comandos := 'f'.
 	oldXCoordinate := marsRover xCoordinates.
 	oldYCoordinate  := marsRover yCoordinates.
@@ -109,10 +109,10 @@ test10marsRoverWithHeadingWestWithFCommandMustHaveSameYCoordinateAndOneUnitMinus
 	self assert: (marsRover yCoordinates) = (oldYCoordinate  ).
 	self assert: (marsRover xCoordinates) = (oldXCoordinate - 1). ! !
 
-!MarsRoverTest methodsFor: 'tests' stamp: 'db 10/6/2019 17:46:39'!
+!MarsRoverTest methodsFor: 'tests' stamp: 'g j 10/7/2019 09:38:35'!
 test11marsRoverHasToExecuteUntilACommandIsInvalid
 	|marsRover comandos oldXCoordinate oldYCoordinate|
-	marsRover := MarsRover initializeWithX: 0 andY: 0 andHeading: $N.
+	marsRover := MarsRover withX: 0 andY: 0 andHeading: $N.
 	comandos := 'ffrfgf'. """ posicion final x:1 y: 2""" 
 	oldXCoordinate := marsRover xCoordinates.
 	oldYCoordinate  := marsRover yCoordinates.
@@ -120,10 +120,10 @@ test11marsRoverHasToExecuteUntilACommandIsInvalid
 	self assert: (marsRover yCoordinates) = (oldYCoordinate + 2).
 	self assert: (marsRover xCoordinates) = (oldXCoordinate +1 ). ! !
 
-!MarsRoverTest methodsFor: 'tests' stamp: 'db 10/6/2019 17:51:13'!
+!MarsRoverTest methodsFor: 'tests' stamp: 'g j 10/7/2019 09:39:49'!
 test12marsRoverStopExecutingCommandsWhenFindsInvalid
 	|marsRover comandos oldXCoordinate oldYCoordinate|
-	marsRover := MarsRover initializeWithX: 0 andY: 0 andHeading: $N.
+	marsRover := MarsRover withX: 0 andY: 0 andHeading: $N.
 	comandos := 'affffriririfrfgf'.
 	oldXCoordinate := marsRover xCoordinates.
 	oldYCoordinate  := marsRover yCoordinates.
@@ -131,10 +131,10 @@ test12marsRoverStopExecutingCommandsWhenFindsInvalid
 	self assert: (marsRover yCoordinates) = oldYCoordinate.
 	self assert: (marsRover xCoordinates) = oldXCoordinate! !
 
-!MarsRoverTest methodsFor: 'tests' stamp: 'db 10/6/2019 17:55:59'!
+!MarsRoverTest methodsFor: 'tests' stamp: 'g j 10/7/2019 09:39:56'!
 test13marsRoverTurnsNotChangePosition
 	|marsRover comandos oldXCoordinate oldYCoordinate|
-	marsRover := MarsRover initializeWithX: 0 andY: 0 andHeading: $N.
+	marsRover := MarsRover withX: 0 andY: 0 andHeading: $N.
 	comandos := 'rrrriiiirrriiii'.
 	oldXCoordinate := marsRover xCoordinates.
 	oldYCoordinate  := marsRover yCoordinates.
@@ -142,10 +142,10 @@ test13marsRoverTurnsNotChangePosition
 	self assert: (marsRover yCoordinates) = oldYCoordinate.
 	self assert: (marsRover xCoordinates) = oldXCoordinate! !
 
-!MarsRoverTest methodsFor: 'tests' stamp: 'db 10/6/2019 17:55:15'!
+!MarsRoverTest methodsFor: 'tests' stamp: 'g j 10/7/2019 09:40:12'!
 test14marsRover360TurnsNotChangeHeading
 	|marsRover comandos oldXCoordinate oldYCoordinate|
-	marsRover := MarsRover initializeWithX: 0 andY: 0 andHeading: $N.
+	marsRover := MarsRover withX: 0 andY: 0 andHeading: $N.
 	comandos := 'rrrr'.
 	oldXCoordinate := marsRover xCoordinates.
 	oldYCoordinate  := marsRover yCoordinates.
@@ -155,7 +155,7 @@ test14marsRover360TurnsNotChangeHeading
 	self assert: (marsRover heading) = $N.
 	
 	""" ahora left turns"""
-	marsRover := MarsRover initializeWithX: 0 andY: 0 andHeading: $N.
+	marsRover := MarsRover withX: 0 andY: 0 andHeading: $N.
 	comandos := 'iiii'.
 	oldXCoordinate := marsRover xCoordinates.
 	oldYCoordinate  := marsRover yCoordinates.
@@ -188,9 +188,10 @@ Object subclass: #Coordinate
 
 ! !
 
-!Coordinate methodsFor: 'as yet unclassified' stamp: 'db 10/6/2019 17:19:09'!
+!Coordinate methodsFor: 'as yet unclassified' stamp: 'db 10/9/2019 18:26:10'!
 checkAValue: aValue and: anotherValue
-	(aValue class = SmallInteger) ifTrue: [(anotherValue class) = SmallInteger ifTrue: [^true.]]! !
+	(aValue class = SmallInteger) ifTrue: [(anotherValue class) = SmallInteger ifTrue: [^true.]].
+	^false.! !
 
 !Coordinate methodsFor: 'as yet unclassified' stamp: 'db 10/6/2019 17:30:17'!
 newWithX: aValue andY: anotherValue
@@ -229,7 +230,7 @@ Object subclass: #HandlerMovement
 	poolDictionaries: ''
 	category: '21-MarsRover'!
 
-!HandlerMovement methodsFor: 'as yet unclassified' stamp: 'db 10/6/2019 17:16:04'!
+!HandlerMovement methodsFor: 'as yet unclassified' stamp: 'db 10/9/2019 18:39:16'!
 checkValidHeading: aHeading
 	^('NSEO' includes: aHeading)! !
 
@@ -240,16 +241,6 @@ do
 !HandlerMovement methodsFor: 'as yet unclassified' stamp: 'db 10/6/2019 17:11:32'!
 heading
 	^self subclassResponsibility .! !
-
-!HandlerMovement methodsFor: 'as yet unclassified' stamp: 'db 10/6/2019 17:21:19'!
-initializeWithHeading: aHeading
-	|aHeadingUppercase|
-	aHeadingUppercase := aHeading asUppercase.
-	(self checkValidHeading: aHeadingUppercase) ifFalse: [^ self InvalidHeading ].
-	(aHeadingUppercase = $O) ifTrue: [^LeftMovement new].
-	(aHeadingUppercase = $N) ifTrue: [^UpMovement new].
-	(aHeadingUppercase = $S) ifTrue: [^DownMovement new].
-	(aHeadingUppercase = $E) ifTrue: [^RightMovement new].! !
 
 !HandlerMovement methodsFor: 'as yet unclassified' stamp: 'db 10/6/2019 17:07:05'!
 rotateLeft
@@ -263,15 +254,34 @@ rotateRight
 
 !classDefinition: 'HandlerMovement class' category: #'21-MarsRover'!
 HandlerMovement class
-	instanceVariableNames: ''!
+	instanceVariableNames: 'uniqueInstance'!
 
 !HandlerMovement class methodsFor: 'as yet unclassified' stamp: 'db 10/6/2019 17:16:21'!
 InvalidHeading
 	^self error: 'Invalid heading'! !
 
-!HandlerMovement class methodsFor: 'as yet unclassified' stamp: 'db 10/6/2019 17:10:36'!
+!HandlerMovement class methodsFor: 'as yet unclassified' stamp: 'db 10/9/2019 18:39:53'!
+checkValidHeading: aHeading
+	^('NSEO' includes: aHeading)! !
+
+!HandlerMovement class methodsFor: 'as yet unclassified' stamp: 'db 10/9/2019 18:54:11'!
 initializeWithHeading: aHeading
-	^self new initializeWithHeading: aHeading.! !
+
+	|aHeadingUppercase|
+	aHeadingUppercase := aHeading asUppercase.
+	(self checkValidHeading: aHeadingUppercase) ifFalse: [^ self InvalidHeading ].
+	(aHeadingUppercase = $O) ifTrue: [^LeftMovement new].
+	(aHeadingUppercase = $N) ifTrue: [^UpMovement new].
+	(aHeadingUppercase = $S) ifTrue: [^DownMovement new].
+	(aHeadingUppercase = $E) ifTrue: [^RightMovement new].! !
+
+!HandlerMovement class methodsFor: 'as yet unclassified' stamp: 'db 10/9/2019 18:31:51'!
+new
+	^self subclassResponsibility ! !
+
+!HandlerMovement class methodsFor: 'as yet unclassified' stamp: 'db 10/9/2019 18:28:52'!
+withHeading: aHeading
+	^self initializeWithHeading: aHeading.! !
 
 
 !classDefinition: #DownMovement category: #'21-MarsRover'!
@@ -281,11 +291,9 @@ HandlerMovement subclass: #DownMovement
 	poolDictionaries: ''
 	category: '21-MarsRover'!
 
-!DownMovement methodsFor: 'as yet unclassified' stamp: 'db 10/6/2019 17:06:30'!
+!DownMovement methodsFor: 'as yet unclassified' stamp: 'g j 10/7/2019 10:27:33'!
 do
-	|newCoord|
-	newCoord := Coordinate newWithX: 0 andY: -1.
-	^newCoord .! !
+	^Coordinate newWithX: 0 andY: -1.! !
 
 !DownMovement methodsFor: 'as yet unclassified' stamp: 'db 10/6/2019 17:11:42'!
 heading
@@ -299,6 +307,17 @@ rotateLeft
 rotateRight
 	^LeftMovement new.! !
 
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'DownMovement class' category: #'21-MarsRover'!
+DownMovement class
+	instanceVariableNames: ''!
+
+!DownMovement class methodsFor: 'as yet unclassified' stamp: 'db 10/9/2019 18:46:14'!
+new
+	uniqueInstance ifNil: [uniqueInstance := self basicNew initialize].
+       ^uniqueInstance ! !
+
 
 !classDefinition: #LeftMovement category: #'21-MarsRover'!
 HandlerMovement subclass: #LeftMovement
@@ -307,11 +326,9 @@ HandlerMovement subclass: #LeftMovement
 	poolDictionaries: ''
 	category: '21-MarsRover'!
 
-!LeftMovement methodsFor: 'as yet unclassified' stamp: 'db 10/6/2019 16:52:14'!
+!LeftMovement methodsFor: 'as yet unclassified' stamp: 'g j 10/7/2019 10:26:53'!
 do
-	|newCoord|.
-	newCoord  := Coordinate newWithX: -1 andY: 0.
-	^newCoord ! !
+	^Coordinate newWithX: -1 andY: 0.! !
 
 !LeftMovement methodsFor: 'as yet unclassified' stamp: 'db 10/6/2019 17:11:48'!
 heading
@@ -326,6 +343,17 @@ rotateRight
 	^UpMovement new.
 	! !
 
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'LeftMovement class' category: #'21-MarsRover'!
+LeftMovement class
+	instanceVariableNames: ''!
+
+!LeftMovement class methodsFor: 'as yet unclassified' stamp: 'db 10/9/2019 18:54:19'!
+new
+	uniqueInstance ifNil: [uniqueInstance := self basicNew initialize].
+       ^uniqueInstance ! !
+
 
 !classDefinition: #RightMovement category: #'21-MarsRover'!
 HandlerMovement subclass: #RightMovement
@@ -334,11 +362,9 @@ HandlerMovement subclass: #RightMovement
 	poolDictionaries: ''
 	category: '21-MarsRover'!
 
-!RightMovement methodsFor: 'as yet unclassified' stamp: 'db 10/6/2019 17:06:53'!
+!RightMovement methodsFor: 'as yet unclassified' stamp: 'g j 10/7/2019 10:27:16'!
 do
-	|newCoord|.
-	newCoord  := Coordinate newWithX: 1 andY: 0.
-	^newCoord ! !
+	^Coordinate newWithX: 1 andY: 0.! !
 
 !RightMovement methodsFor: 'as yet unclassified' stamp: 'db 10/6/2019 17:12:03'!
 heading
@@ -352,6 +378,17 @@ rotateLeft
 rotateRight
 	^DownMovement new.! !
 
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'RightMovement class' category: #'21-MarsRover'!
+RightMovement class
+	instanceVariableNames: ''!
+
+!RightMovement class methodsFor: 'as yet unclassified' stamp: 'db 10/9/2019 18:32:28'!
+new
+	uniqueInstance ifNil: [uniqueInstance := self basicNew initialize].
+       ^uniqueInstance ! !
+
 
 !classDefinition: #UpMovement category: #'21-MarsRover'!
 HandlerMovement subclass: #UpMovement
@@ -360,11 +397,9 @@ HandlerMovement subclass: #UpMovement
 	poolDictionaries: ''
 	category: '21-MarsRover'!
 
-!UpMovement methodsFor: 'as yet unclassified' stamp: 'db 10/6/2019 17:06:44'!
+!UpMovement methodsFor: 'as yet unclassified' stamp: 'g j 10/7/2019 10:27:58'!
 do
-	|newCoord|.
-	newCoord  := Coordinate newWithX: 0 andY: 1.
-	^newCoord ! !
+	^Coordinate newWithX: 0 andY: 1.! !
 
 !UpMovement methodsFor: 'as yet unclassified' stamp: 'db 10/6/2019 17:11:57'!
 heading
@@ -379,6 +414,17 @@ rotateRight
 	^RightMovement new.
 	! !
 
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'UpMovement class' category: #'21-MarsRover'!
+UpMovement class
+	instanceVariableNames: ''!
+
+!UpMovement class methodsFor: 'as yet unclassified' stamp: 'db 10/9/2019 18:48:26'!
+new
+	uniqueInstance ifNil: [uniqueInstance := self basicNew initialize].
+       ^uniqueInstance ! !
+
 
 !classDefinition: #MarsRover category: #'21-MarsRover'!
 Object subclass: #MarsRover
@@ -387,15 +433,16 @@ Object subclass: #MarsRover
 	poolDictionaries: ''
 	category: '21-MarsRover'!
 
-!MarsRover methodsFor: 'as yet unclassified' stamp: 'db 10/6/2019 17:45:47'!
+!MarsRover methodsFor: 'as yet unclassified' stamp: 'g j 10/7/2019 10:22:56'!
 checkValidCommand: aCommand
-	('FBIR' includes: (aCommand asUppercase)) ifFalse:[('FBIR' includes: aCommand) ifFalse:[^false.].].
+	('FBIR' includes: aCommand asUppercase) ifFalse: [ ^false].
+	
 	^true.! !
 
-!MarsRover methodsFor: 'as yet unclassified' stamp: 'db 10/6/2019 17:48:01'!
-executeCommands: aStringOfCommands
+!MarsRover methodsFor: 'as yet unclassified' stamp: 'g j 10/7/2019 10:21:31'!
+executeCommands: aSequenceOfCommands
 |aCommand	|
-	aStringOfCommands do: [:command | aCommand := command asUppercase. 
+	aSequenceOfCommands do: [:command | aCommand := command asUppercase. 
 									(self checkValidCommand: aCommand) ifTrue:[
 									(aCommand = $F) ifTrue: [coordinates := coordinates + handlerMovement do ].
 									(aCommand = $R) ifTrue: [handlerMovement := handlerMovement rotateRight]. 
@@ -411,15 +458,15 @@ heading
 	^handlerMovement heading.
 ! !
 
-!MarsRover methodsFor: 'as yet unclassified' stamp: 'db 10/6/2019 17:02:27'!
+!MarsRover methodsFor: 'as yet unclassified' stamp: 'g j 10/7/2019 09:42:46'!
 initializeWithX: xValue andY: yValue andHeading: aHeading
-	handlerMovement := HandlerMovement initializeWithHeading: aHeading.
+	handlerMovement := HandlerMovement withHeading: aHeading.
 	coordinates  := Coordinate newWithX: xValue andY: yValue.
 	^self! !
 
-!MarsRover methodsFor: 'as yet unclassified' stamp: 'db 10/6/2019 16:59:48'!
+!MarsRover methodsFor: 'as yet unclassified' stamp: 'g j 10/7/2019 10:20:44'!
 xCoordinates
-	^coordinates x! !
+	^coordinates x.! !
 
 !MarsRover methodsFor: 'as yet unclassified' stamp: 'db 10/6/2019 17:10:10'!
 yCoordinates
@@ -437,4 +484,8 @@ InvalidCommand
 
 !MarsRover class methodsFor: 'as yet unclassified' stamp: 'db 10/6/2019 14:09:32'!
 initializeWithX: xValue andY: yValue andHeading: aHeading
+	^(self new) initializeWithX: xValue andY: yValue andHeading: aHeading.! !
+
+!MarsRover class methodsFor: 'as yet unclassified' stamp: 'g j 10/7/2019 09:40:59'!
+withX: xValue andY: yValue andHeading: aHeading
 	^(self new) initializeWithX: xValue andY: yValue andHeading: aHeading.! !
