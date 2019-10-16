@@ -5,24 +5,23 @@ TestCase subclass: #Test
 	poolDictionaries: ''
 	category: 'TerniLapilli'!
 
-!Test methodsFor: 'tests' stamp: 'db 10/15/2019 20:41:52'!
+!Test methodsFor: 'tests' stamp: 'db 10/16/2019 19:45:52'!
 test01WhenGameStartsPlayerXIsPlaying
 
 	| juego |
 	
 	juego := Juego initialize.
 
-	self assert: (juego isPlayingX) = true.! !
+	self assert: (juego isPlayingX).! !
 
-!Test methodsFor: 'tests' stamp: 'db 10/16/2019 17:59:01'!
+!Test methodsFor: 'tests' stamp: 'db 10/16/2019 19:58:33'!
 test02WhenGameIsCreatedTheGameIsNotOverAndGameIsNotTied
 
 	| juego |
 	
 	juego := Juego initialize.
 	
-	self assert: (juego isOver) = false.
-	self assert: (juego isTied) = false.! !
+	self assert: (juego isOver) = false.! !
 
 !Test methodsFor: 'tests' stamp: 'db 10/15/2019 20:41:57'!
 test03WhenGameIsCreatedPlayerOIsNotPlaying
@@ -32,13 +31,13 @@ test03WhenGameIsCreatedPlayerOIsNotPlaying
 	
 	self assert: (juego isPlayingO) = false. ! !
 
-!Test methodsFor: 'tests' stamp: 'db 10/15/2019 20:42:00'!
+!Test methodsFor: 'tests' stamp: 'db 10/16/2019 19:45:10'!
 test04WhenGameIsCreatedTheBoardIsEmpty
 	| juego |
 	
 	juego := Juego initialize.
 	
-	self assert: juego boardIsEmpty = true.! !
+	self assert: juego boardIsEmpty.! !
 
 !Test methodsFor: 'tests' stamp: 'db 10/15/2019 20:42:03'!
 test05WhenGameIsCreatedNeitherPlayerHasWon
@@ -50,131 +49,133 @@ test05WhenGameIsCreatedNeitherPlayerHasWon
 	self assert: juego hasPlayerXWon  = false.
 	self assert: juego hasPlayerOWon  = false.! !
 
-!Test methodsFor: 'tests' stamp: 'db 10/15/2019 20:42:05'!
+!Test methodsFor: 'tests' stamp: 'db 10/16/2019 20:01:22'!
 test06EachPlayerCanMoveOnePiecePerMove
   | juego |
 
 	juego := Juego initialize.
 	
-	juego putXAt: #(1 1).
+	juego putXAt: 1@1.
 	
 	self assert: juego isPlayingO.
 	
-	self should: [juego putXAt: #(1 2)]
-		 raise: Error.
+	self should: [juego putXAt: 1@2]
+		raise: Error
+		withMessageText: 'Player is not moving'.
 	
 	
 	self assert: juego isPlayingO .! !
 
-!Test methodsFor: 'tests' stamp: 'db 10/15/2019 21:14:57'!
+!Test methodsFor: 'tests' stamp: 'db 10/16/2019 20:04:45'!
 test07TheFirstThreeMovesImpliesPutPiecesOnTheBoard
 	| juego |
 	
 	juego := Juego new.
 	
-	juego putXAt: #(1 1).
+	juego putXAt: 1@1.
 	self assert: juego isPlayingO.
 	
-	juego putOAt: #(3 3).
+	juego putOAt: 3@3.
 	self assert: juego isPlayingX.
 	
-	juego putXAt: #(1 2).
+	juego putXAt: 1@2.
 	self assert: juego isPlayingO.
 	
-	juego putOAt: #(3 2).
+	juego putOAt: 3@2.
 	self assert: juego isPlayingX.
 	
-	juego putXAt: #(2 1).
+	juego putXAt: 2@1.
 	self assert: juego isPlayingO.
 	
-	juego putOAt: #(2 3).
+	juego putOAt: 2@3.
 	self assert: juego isPlayingX.
 ! !
 
-!Test methodsFor: 'tests' stamp: 'db 10/15/2019 20:52:29'!
+!Test methodsFor: 'tests' stamp: 'db 10/16/2019 20:13:02'!
 test08FromFourthMovePlayerCantPutPiecesInsteadHasToMoveThem
 	| juego |
 
 	juego := Juego new.
 	
-	juego putXAt: #(1 1).
+	juego putXAt: 1@1.
 	self assert: juego isPlayingO.
 	
-	juego putOAt: #(3 3).
+	juego putOAt: 3@3.
 	self assert: juego isPlayingX.
 	
-	juego putXAt: #(1 2).
+	juego putXAt: 1@2.
 	self assert: juego isPlayingO.
-	juego putOAt: #(3 2).
+	juego putOAt: 3@2.
 	self assert: juego isPlayingX.
-	juego putXAt: #(2 1).
+	juego putXAt: 2@1.
 	self assert: juego isPlayingO.
-	juego putOAt: #(2 3).
+	juego putOAt: 2@3.
 	self assert: juego isPlayingX.
 		
-	self should: [juego putXAt: #(1 1)]
+	self should: [juego putXAt: 1@1]
 		raise: Error.
 	
-	self should: [juego putOAt: #(1 1)]
+	self should: [juego putOAt: 1@1]
 		raise: Error.
 		
 		
 	! !
 
-!Test methodsFor: 'tests' stamp: 'db 10/16/2019 17:56:50'!
+!Test methodsFor: 'tests' stamp: 'db 10/16/2019 20:16:53'!
 test09CheckPositionsOfPiecesIsCorrect
 
 	| positionsLeft juego |
 	juego := Juego new.
 	
-	juego putXAt: #(1 1).
-	self assert: (juego isPlaceOccuped: #(1 1)).
-	juego putOAt: #(2 3).
-	self assert: (juego isPlaceOccuped: #(2 3)).
+	juego putXAt: 1@1.
+	self assert: (juego isPlaceOccuped: 1@1).
+	juego putOAt: 2@3.
+	self assert: (juego isPlaceOccuped: 2@3).
+	"""
+	positionsLeft := #((1@2) (1@3) (2@2) (2@1) (3@1) (3@2) (3@3)).
 	
-	positionsLeft := #((1 2) #(1 3) #(2 2) #(2 1) #(3 1) #(3 2) #(3 3)).
-	
-	self assert: (positionsLeft allSatisfy: [:position | (juego isPlaceOccuped: position) = false]).! !
+	self assert: (positionsLeft allSatisfy: [:position | (juego isPlaceOccuped: position) = false]).
+	"""! !
 
-!Test methodsFor: 'tests' stamp: 'db 10/15/2019 22:59:59'!
+!Test methodsFor: 'tests' stamp: 'db 10/16/2019 20:17:22'!
 test10CheckIfThreeInSameRowFinishesTheGame
 
 	| juego |
 	
 	juego := Juego new.
 	
-	juego putXAt: #(1 1).
-	juego putOAt: #(2 1).
-	juego putXAt: #(1 2).
-	juego putOAt: #(2 3 ).
-	juego putXAt: #(1 3).
+	juego putXAt: 1@1.
+	juego putOAt: 2@1.
+	juego putXAt: 1@2.
+	juego putOAt: 2@3.
+	juego putXAt: 1@3.
 	
 	self assert: (juego isOver).
 	! !
 
-!Test methodsFor: 'tests' stamp: 'db 10/16/2019 17:56:50'!
+!Test methodsFor: 'tests' stamp: 'db 10/16/2019 20:18:12'!
 test11CheckMoveOfPositionIsCorrect
 	| juego |
 	juego := Juego new.
 	
-	juego putXAt: #(1 1).
+	juego putXAt: 1@1.
 	self assert: juego isPlayingO.
 	
-	juego putOAt: #(3 3).
+	juego putOAt: 3@3.
 	self assert: juego isPlayingX.
 	
-	juego putXAt: #(1 2).
+	juego putXAt: 1@2.
 	self assert: juego isPlayingO.
-	juego putOAt: #(3 2).
+	juego putOAt: 3@2.
 	self assert: juego isPlayingX.
-	juego putXAt: #(2 1).
+	juego putXAt: 2@1.
 	self assert: juego isPlayingO.
-	juego putOAt: #(2 3).
+	juego putOAt: 2@3.
 	self assert: juego isPlayingX.
 	
-	juego moveFrom: #(1 2) To: #(1 3).
-	self assert: (juego isPlaceOccuped: #(1 3)).
-	self assert: ((juego isPlaceOccuped: #(1 2)) = false).
+	juego moveFrom: 1@2 To: 1@3.
+	self assert: (juego isPlaceOccuped: 1@3).
+	self assert: ((juego isPlaceOccuped: 1@2) = false).
 	self assert: juego isPlayingO.
 		
 		
@@ -182,42 +183,68 @@ test11CheckMoveOfPositionIsCorrect
 		
 	! !
 
-!Test methodsFor: 'tests' stamp: 'db 10/16/2019 17:54:31'!
+!Test methodsFor: 'tests' stamp: 'db 10/16/2019 20:18:24'!
 test12WhenGameIsOverNeitherPlayerCanMove
 	| juego |
 	juego := Juego new.
 	
 	self assert: (juego isOver) = false.
 	
-	juego putXAt: #(1 1).
-	juego putOAt: #(2 1).
-	juego putXAt: #(1 2).
-	juego putOAt: #(2 3 ).
-	juego putXAt: #(1 3).
+	juego putXAt: 1@1.
+	juego putOAt: 2@1.
+	juego putXAt: 1@2.
+	juego putOAt: 2@3.
+	juego putXAt: 1@3.
 	
 	self assert: juego isOver.
 	self should: [juego moveFrom: #(1 1) To: #(2 2) ] 
 		raise: Error.
 ! !
 
-!Test methodsFor: 'tests' stamp: 'db 10/16/2019 17:54:54'!
+!Test methodsFor: 'tests' stamp: 'db 10/16/2019 20:18:34'!
 test13AssertPlayerXWon
 	| juego |
 	juego := Juego new.
 	
 	self assert: (juego isOver) = false.
 	
-	juego putXAt: #(1 1).
-	juego putOAt: #(2 1).
-	juego putXAt: #(1 2).
-	juego putOAt: #(2 3 ).
-	juego putXAt: #(1 3).
+	juego putXAt: 1@1.
+	juego putOAt: 2@1.
+	juego putXAt: 1@2.
+	juego putOAt: 2@3.
+	juego putXAt: 1@3.
+	
 	
 	self assert: juego isOver.
 	
 	self assert: (juego hasPlayerXWon).
 	self assert: (juego hasPlayerOWon) = false.
 	! !
+
+!Test methodsFor: 'tests' stamp: 'db 10/16/2019 20:37:08'!
+test14CantMoveAPieceToAPositionOccuped
+
+	| juego |
+	
+	juego := Juego new.
+	
+	juego putXAt: 1@1.
+	
+	self should: [juego putOAt: 1@1]
+		raise: Error
+		withMessageText: 'Position occuped'.! !
+
+!Test methodsFor: 'tests' stamp: 'db 10/16/2019 20:36:16'!
+test15CantMoveToPositionOutsideTheBoard
+
+| juego |
+	juego := Juego new.
+	
+	juego putXAt: 1@1.
+	
+	self should: [juego putOAt: 5@5]
+		raise: Error
+		withMessageText: 'Position invalid'.! !
 
 
 !classDefinition: #Board category: #TerniLapilli!
@@ -231,47 +258,51 @@ Object subclass: #Board
 isEmpty
 	^(((board at:1) = #(0 0 0)) & ((board at:2) = #(0 0 0)) & ((board at:3) = #(0 0 0)))! !
 
-!Board methodsFor: 'state of board' stamp: 'db 10/15/2019 21:12:24'!
+!Board methodsFor: 'state of board' stamp: 'db 10/16/2019 20:03:50'!
 positionIsFree: aPosition
 
-	^((board at:(aPosition at: 1) ) at: (aPosition at:2)) = 0! !
+	^((board at:(aPosition x) ) at: (aPosition y)) = 0! !
 
 !Board methodsFor: 'state of board' stamp: 'db 10/15/2019 22:53:13'!
 positionIsOccuped: aPosition
 	^(self positionIsFree: aPosition) = false.! !
 
-!Board methodsFor: 'state of board' stamp: 'db 10/15/2019 18:52:23'!
+!Board methodsFor: 'state of board' stamp: 'db 10/16/2019 20:03:31'!
 positionIsValid: aPosition
 							
-	 ^ aPosition allSatisfy: [:pos | (pos >= 1) & (pos <= 3)].
-	! !
+	 (aPosition x >= 1) & (aPosition x <= 3) ifTrue: [ 
+												(aPosition y >= 1) & (aPosition y <= 3) ifTrue: [
+																							^true
+																						]
+												].
+	^false.! !
 
 
-!Board methodsFor: 'state of places' stamp: 'db 10/15/2019 23:33:46'!
+!Board methodsFor: 'state of places' stamp: 'db 10/16/2019 20:00:50'!
 moveFrom: aPosition To:anotherPosition
 	|anteriorId filaVieja filaNueva |
-	anteriorId := (board at: (aPosition at: 1)) at: (aPosition at:2).
-	filaVieja := board at: (aPosition at: 1).
-	filaVieja at: (aPosition at: 2) put: 0.
-	filaNueva := board at: (anotherPosition at: 1).
-	filaNueva at: (anotherPosition at:2 ) put: anteriorId.! !
+	anteriorId := (board at: (aPosition x)) at: (aPosition y).
+	filaVieja := board at: (aPosition x).
+	filaVieja at: (aPosition y) put: 0.
+	filaNueva := board at: (anotherPosition x).
+	filaNueva at: (anotherPosition y) put: anteriorId.! !
 
-!Board methodsFor: 'state of places' stamp: 'db 10/15/2019 22:41:40'!
+!Board methodsFor: 'state of places' stamp: 'db 10/16/2019 20:00:24'!
 put: aIdentifier to: aPosition
 |temp pos2|
-	temp := board at: (aPosition at:1).
-	pos2 := aPosition at: 2.
+	temp := board at: (aPosition x).
+	pos2 := aPosition y.
 	temp at: pos2 put: aIdentifier.! !
 
 
-!Board methodsFor: 'initialization' stamp: 'db 10/15/2019 22:47:30'!
+!Board methodsFor: 'initialization' stamp: 'db 10/16/2019 19:53:57'!
 initialize
 	|a b c|
 	size := 3.
 	a := Array with:0 with:0 with:0.
 	b := Array with:0 with:0 with:0.
 	c := Array with:0 with:0 with:0.
-	board := Array new:4.
+	board := Array new:3.
 	board 
 		at: 1 put: a;
 		at: 2 put: b;
@@ -313,23 +344,14 @@ isPlaceOccuped: aPosition
 finishTheGame
 	isOver := true.! !
 
-!Juego methodsFor: 'state of game' stamp: 'db 10/15/2019 19:34:55'!
-hasWonPlayer: aPlayer 
-	^self hasThreeInLinePlayer: aPlayer! !
-
 !Juego methodsFor: 'state of game' stamp: 'db 10/15/2019 18:04:10'!
 isOver
 	^isOver ! !
 
-!Juego methodsFor: 'state of game' stamp: 'db 10/15/2019 18:04:14'!
-isTied
-	^isTied ! !
 
-
-!Juego methodsFor: 'initialization' stamp: 'db 10/15/2019 23:23:49'!
+!Juego methodsFor: 'initialization' stamp: 'db 10/16/2019 19:59:25'!
 initialize
 	isOver := false.
-	isTied := false.
 	playerPlaying := #X.
 	playerXPieces := Array with:0 with:0 with:0.  """ #(0 0 0)"""
 	playerOPieces := Array with:0 with:0 with:0.
@@ -370,24 +392,23 @@ hasPlayerXThreeInLine
 hasPlayerXWon
 	^self hasThreeInLinePlayer: #X.! !
 
-!Juego methodsFor: 'players' stamp: 'db 10/15/2019 23:23:04'!
+!Juego methodsFor: 'players' stamp: 'db 10/16/2019 20:11:19'!
 hasThreeInLinePlayer: aPlayer
-	|a b c playerPieces|					
+	|pieza1 pieza2 pieza3 playerPieces|					
 	aPlayer = #X ifTrue: [playerPieces := playerXPieces] ifFalse: [aPlayer = #O ifTrue: [playerPieces := playerOPieces] ifFalse:[^false]].	
 	(playerPieces includes: 0) ifTrue: [^false].
-	a := playerXPieces at:1.
-	b := playerXPieces at:2.
-	c := playerXPieces at:3.
-	
-	(board positionIsValid: a) ifTrue: [
-							(board positionIsValid: b) ifTrue: [
-													(board positionIsValid: c) ifTrue: [
+	pieza1 := playerXPieces at: 1.
+	pieza2 := playerXPieces at: 2.
+	pieza3 := playerXPieces at: 3.
+	(board positionIsValid: pieza1) ifTrue: [
+							(board positionIsValid: pieza2) ifTrue: [
+													(board positionIsValid: pieza3) ifTrue: [
 																					"""misma fila """			 
-																					((a at: 1) = (b at: 1)) ifTrue: [((a at:1) = (c at:1)) ifTrue: [^true]].
+																					((pieza1 x) = (pieza2 x)) ifTrue: [((pieza1 x) = (pieza3 x)) ifTrue: [^true]].
 																					""" misma columna"""
-																					((a at: 2) = (b at: 2)) ifTrue: [((a at:2) = (c at:2)) ifTrue: [^true]].
+																					((pieza1 y) = (pieza2 y)) ifTrue: [((pieza1 y) = (pieza3 y)) ifTrue: [^true]].
 																					""" en diagonal """
-																					((a at: 1) ~= (b at: 1)) & ((a at: 1) ~= (c at: 1)) & ((b at: 1) ~= (c at: 1)) & ((a at: 2) ~= (b at: 1)) & ((a at: 2) ~=(c at: 1)) & ((b at: 2) ~= (c at:2)) ifTrue:[^true.].
+																					((pieza1 x) ~= (pieza2 x)) & ((pieza1 x) ~= (pieza3 x)) & ((pieza2 x) ~= (pieza3 x)) & ((pieza2 y) ~= (pieza2 x)) & ((pieza1 y) ~=(pieza3 x)) & ((pieza2 y) ~= (pieza3 y)) ifTrue:[^true.].
 																					].
 															].
 									].
@@ -407,10 +428,10 @@ isPlayingX
 checkIfPlayerWon
 	^self hasThreeInLinePlayer: playerPlaying.! !
 
-!Juego methodsFor: 'movements' stamp: 'db 10/16/2019 17:51:06'!
+!Juego methodsFor: 'movements' stamp: 'db 10/16/2019 19:52:16'!
 moveFrom: aPositionOfAPiece To: aPositionInTheBoard
 	| currentPlayerPieces |
-	isOver ifTrue:[^self ErrorGameIsOver].
+	isOver ifTrue:[^Juego ErrorGameIsOver].
 	playerPlaying =  #X ifTrue: [currentPlayerPieces := playerXPieces ] ifFalse:[currentPlayerPieces := playerOPieces ].
 	(board positionIsValid: aPositionOfAPiece) & 
 	(board positionIsValid: aPositionInTheBoard) &
@@ -424,45 +445,44 @@ moveFrom: aPositionOfAPiece To: aPositionInTheBoard
 	^Error
 		! !
 
-!Juego methodsFor: 'movements' stamp: 'db 10/16/2019 18:03:39'!
+!Juego methodsFor: 'movements' stamp: 'db 10/16/2019 20:28:07'!
 putOAt: aPosition
-	isOver ifTrue:[^self ErrorGameIsOver].
-	playerPlaying = #O ifFalse: [^self ErrorPlayerIsNotMoving ].
+    self putInPosition: aPosition fromPlayer: #O withOpponent: #X.
 
-	(playerOPieces allSatisfy:[:piece | piece ~= 0]) ifTrue:[
-													^ self ErrorPlayerHasNoMorePiecesToPut 
-												].
+! !
 
-	(board positionIsValid: aPosition) & (board positionIsFree: aPosition) ifTrue: [
-																				playerOPieces at: (playerOPieces findFirst: [:p | p = 0]) put: aPosition.
-																				board put: #O to: aPosition.
-																			] ifFalse:[^Juego ErrorPositionInvalidOrOccuped ].
-										
-	self checkIfPlayerWon ifTrue: [self finishTheGame] ifFalse: [
-		
-																playerPlaying := #X.
-		
-															].! !
-
-!Juego methodsFor: 'movements' stamp: 'db 10/16/2019 18:03:34'!
+!Juego methodsFor: 'movements' stamp: 'db 10/16/2019 20:27:39'!
 putXAt: aPosition
-	isOver ifTrue:[^self ErrorGameIsOver].
-	playerPlaying = #X ifFalse: [^self ErrorPlayerIsNotMoving ].
-	
-	(playerXPieces allSatisfy:[:piece | piece ~= 0]) ifTrue:[
-													^ self ErrorPlayerHasNoMorePiecesToPut 
-												].
-											
-	(board positionIsValid: aPosition) & (board positionIsFree: aPosition) ifTrue: [
-																				playerXPieces at: (playerXPieces findFirst: [:p | p = 0]) put: aPosition.
-																				board put: #X to: aPosition.
-																			] ifFalse:[^Juego ErrorPositionInvalidOrOccuped ].																		
-										
-	self checkIfPlayerWon ifTrue: [self finishTheGame] ifFalse: [
-		
-																playerPlaying := #O.
-		
-															].! !
+	self putInPosition: aPosition fromPlayer: #X withOpponent: #O.
+! !
+
+
+!Juego methodsFor: 'movements - private' stamp: 'db 10/16/2019 20:32:41'!
+putInPosition: aPosition fromPlayer: actualPlayer withOpponent: opponentPlayer
+    | currentPlayerPieces |
+    isOver ifTrue:[^Juego ErrorGameIsOver].
+    playerPlaying = actualPlayer ifFalse: [^Juego ErrorPlayerIsNotMoving ].
+    playerPlaying =  #X ifTrue: [currentPlayerPieces := playerXPieces ] ifFalse:[currentPlayerPieces := playerOPieces ].
+
+    (currentPlayerPieces allSatisfy:[:piece | piece ~= 0]) ifTrue:[
+   												 ^ Juego ErrorPlayerHasNoMorePiecesToPut
+   											 ].
+
+
+	(board positionIsValid: aPosition) ifTrue: [(board positionIsFree: aPosition) ifTrue: [
+																					currentPlayerPieces at: (currentPlayerPieces findFirst: [:p | p = 0]) put: aPosition.
+																					
+																					board put: actualPlayer to: aPosition.
+																				] ifFalse:  [^Juego ErrorPositionOccuped ].
+										] ifFalse:[^Juego ErrorPositionInvalid ].
+   									 
+    self checkIfPlayerWon ifTrue: [self finishTheGame] ifFalse: [
+   	 
+   															 playerPlaying := opponentPlayer.
+   	 
+   														 ].
+
+! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -470,21 +490,29 @@ putXAt: aPosition
 Juego class
 	instanceVariableNames: ''!
 
-!Juego class methodsFor: 'Errors' stamp: 'db 10/16/2019 17:50:41'!
+!Juego class methodsFor: 'Errors' stamp: 'db 10/16/2019 19:33:51'!
 ErrorGameIsOver
-^self error! !
+^self error: 'Game is over'! !
 
-!Juego class methodsFor: 'Errors' stamp: 'db 10/15/2019 20:04:19'!
+!Juego class methodsFor: 'Errors' stamp: 'db 10/16/2019 19:49:53'!
 ErrorPlayerHasNoMorePiecesToPut
-^self Error! !
+	^self error: 'Player has no more pieces to put'! !
 
-!Juego class methodsFor: 'Errors' stamp: 'db 10/15/2019 19:57:12'!
+!Juego class methodsFor: 'Errors' stamp: 'db 10/16/2019 19:34:10'!
 ErrorPlayerIsNotMoving
-	^self error! !
+	^self error: 'Player is not moving'! !
 
-!Juego class methodsFor: 'Errors' stamp: 'db 10/16/2019 18:03:20'!
+!Juego class methodsFor: 'Errors' stamp: 'db 10/16/2019 19:34:32'!
+ErrorPositionInvalid
+	^self error: 'Position invalid'.! !
+
+!Juego class methodsFor: 'Errors' stamp: 'db 10/16/2019 19:37:55'!
 ErrorPositionInvalidOrOccuped
-^self error.! !
+	^self error: 'Position invalid or occuped'.! !
+
+!Juego class methodsFor: 'Errors' stamp: 'db 10/16/2019 20:35:48'!
+ErrorPositionOccuped
+	^self error: 'Position occuped'! !
 
 
 !Juego class methodsFor: 'initialize' stamp: 'db 10/15/2019 20:40:49'!
