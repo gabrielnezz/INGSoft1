@@ -66,6 +66,26 @@ test06EachPlayerCanMoveOnePiecePerMove
 	
 	self assert: juego isPlayingO .! !
 
+!Test methodsFor: 'tests' stamp: 'db 10/16/2019 22:36:05'!
+test06MoveOfMoreThanOneCellOfDistanceIsNotAllowed
+	| juego |
+	
+	juego := Juego new.
+	
+	juego putXAt: 1@1.
+	juego putOAt: 3@3.
+	
+	juego putXAt: 1@2.
+	juego putOAt:3@2.
+	
+	juego putXAt: 2@1.
+	juego putOAt: 2@3.
+	
+	self should:[juego moveFrom: 1@1 To: 1@3]
+		raise: Error
+			withMessageText: 'Move is too far'.
+	! !
+
 !Test methodsFor: 'tests' stamp: 'db 10/16/2019 20:04:45'!
 test07TheFirstThreeMovesImpliesPutPiecesOnTheBoard
 	| juego |
@@ -183,7 +203,7 @@ test11CheckMoveOfPositionIsCorrect
 		
 	! !
 
-!Test methodsFor: 'tests' stamp: 'db 10/16/2019 20:18:24'!
+!Test methodsFor: 'tests' stamp: 'db 10/16/2019 22:57:06'!
 test12WhenGameIsOverNeitherPlayerCanMove
 	| juego |
 	juego := Juego new.
@@ -198,7 +218,8 @@ test12WhenGameIsOverNeitherPlayerCanMove
 	
 	self assert: juego isOver.
 	self should: [juego moveFrom: #(1 1) To: #(2 2) ] 
-		raise: Error.
+		raise: Error
+		withMessageText: 'Game is over'.
 ! !
 
 !Test methodsFor: 'tests' stamp: 'db 10/16/2019 20:18:34'!
@@ -277,6 +298,10 @@ positionIsValid: aPosition
 												].
 	^false.! !
 
+!Board methodsFor: 'state of board' stamp: 'db 10/16/2019 22:07:58'!
+size
+^size ! !
+
 
 !Board methodsFor: 'state of places' stamp: 'db 10/16/2019 20:00:50'!
 moveFrom: aPosition To:anotherPosition
@@ -325,7 +350,7 @@ initialize
 
 !classDefinition: #Juego category: #TerniLapilli!
 Object subclass: #Juego
-	instanceVariableNames: 'isOver isTied playerPlaying board playerXPieces playerOPieces'
+	instanceVariableNames: 'isOver playerPlaying board playerXPieces playerOPieces juegoEstadoActual'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'TerniLapilli'!
@@ -349,7 +374,7 @@ isOver
 	^isOver ! !
 
 
-!Juego methodsFor: 'initialization' stamp: 'db 10/16/2019 19:59:25'!
+!Juego methodsFor: 'initialization' stamp: 'db 10/16/2019 22:56:40'!
 initialize
 	isOver := false.
 	playerPlaying := #X.
@@ -362,31 +387,6 @@ initialize
 !Juego methodsFor: 'players' stamp: 'db 10/15/2019 19:38:52'!
 hasPlayerOWon
 	^self hasThreeInLinePlayer: #O.! !
-
-!Juego methodsFor: 'players' stamp: 'db 10/15/2019 19:33:30'!
-hasPlayerXThreeInLine
-	|a b c|					
-	playerXPieces detect: [:piece | piece = 0 ifTrue: [^false.].].
-	a := playerXPieces at:1.
-	b := playerXPieces at:2.
-	c := playerXPieces at:3.
-	
-	(board positionIsValid: a) ifTrue: [
-							(board positionIsValid: b) ifTrue: [
-													(board positionIsValid: c) ifTrue: [
-																					"""misma fila """			 
-																					((a at: 1) = (b at: 1)) ifTrue: [((a at:1) = (c at:1)) ifTrue: [^true]].
-																					""" misma columna"""
-																					((a at: 2) = (b at: 2)) ifTrue: [((a at:2) = (c at:2)) ifTrue: [^true]].
-																					""" en diagonal """
-																					((a at: 1) ~= (b at: 1) ifTrue: [((a at:1) ~= (c at:1)) ifTrue: [((b at:1) ~= (c at: 1))]]) ifTrue: [
-																																					((a at: 2) ~= (b at: 1) ifTrue: [((a at: 2) ~= (c at:1)) ifTrue: [((b at: 2) ~= (c at: 2))]]) 
-																																											
-																																											].
-																					].
-															].
-									].
-	^false.! !
 
 !Juego methodsFor: 'players' stamp: 'db 10/15/2019 22:57:40'!
 hasPlayerXWon
@@ -424,28 +424,67 @@ isPlayingX
 	^(playerPlaying = #X)! !
 
 
+!Juego methodsFor: 'movements' stamp: 'db 10/16/2019 22:27:18'!
+checkDistanceIsLessThanOneCellOf:  aPosition To: anotherPosition
+
+	"""  no puede ser simetrico"""
+	 (aPosition x = anotherPosition y) & (aPosition y = anotherPosition x) ifTrue:[^false].
+	"""is in same row and then column is one bigger/less  or simmetric """
+	(aPosition x = anotherPosition x) ifTrue: [
+										( ( aPosition y - anotherPosition y)abs <= 1) ifTrue: [
+																					^true.
+																				].
+		
+										]  ifFalse: [
+											(aPosition y = anotherPosition y) ifTrue: [
+																					((aPosition x - anotherPosition  x)abs <= 1) ifTrue: [
+																																^true.
+																															].
+																				].
+											].
+										
+	""" positions are row and column exact 1 bigger/less """								
+	(aPosition x ~= anotherPosition x ) & ((aPosition x - anotherPosition x)abs <= 1) ifTrue:[
+											(aPosition y ~= anotherPosition y) & ( (aPosition y - anotherPosition y)abs <= 1) ifTrue:[
+																					""" check movement is not """
+																					^true.
+																				]
+											].
+	^false.! !
+
 !Juego methodsFor: 'movements' stamp: 'db 10/15/2019 23:06:22'!
 checkIfPlayerWon
 	^self hasThreeInLinePlayer: playerPlaying.! !
 
-!Juego methodsFor: 'movements' stamp: 'db 10/16/2019 19:52:16'!
+!Juego methodsFor: 'movements' stamp: 'db 10/16/2019 22:39:57'!
 moveFrom: aPositionOfAPiece To: aPositionInTheBoard
 	| currentPlayerPieces |
 	isOver ifTrue:[^Juego ErrorGameIsOver].
 	playerPlaying =  #X ifTrue: [currentPlayerPieces := playerXPieces ] ifFalse:[currentPlayerPieces := playerOPieces ].
-	(board positionIsValid: aPositionOfAPiece) & 
-	(board positionIsValid: aPositionInTheBoard) &
-      (board positionIsOccuped: aPositionOfAPiece ) & 
-      (board positionIsFree: aPositionInTheBoard ) &
-	(currentPlayerPieces includes: (aPositionOfAPiece )) ifTrue: [
+	(board positionIsValid: aPositionOfAPiece) ifFalse:[^Juego ErrorPositionInvalid ].
+	
+	 
+	(board positionIsValid: aPositionInTheBoard) ifFalse:[^Juego ErrorPositionInvalid ].
+	
+      (board positionIsOccuped: aPositionOfAPiece ) ifFalse:[^Juego ErrorPositionIsEmpty ].
+
+      (board positionIsFree: aPositionInTheBoard ) ifFalse:[^Juego ErrorPositionOccuped].
+
+	(currentPlayerPieces includes: (aPositionOfAPiece )) ifFalse: [^Juego ErrorPieceIsNotFromPlayerPlaying].
+	
+	(self checkDistanceIsLessThanOneCellOf: aPositionOfAPiece To: aPositionInTheBoard ) ifFalse:[^Juego ErrorMoveIsTooFar ] ifTrue: [
 															board moveFrom: aPositionOfAPiece To:  aPositionInTheBoard.
-															(playerPlaying  = #X) ifTrue: [playerPlaying := #O] ifFalse:[ playerPlaying := #O ].
+															(playerPlaying  = #X) ifTrue: [
+																							playerPlaying := #O
+																						] ifFalse:[
+																						 	playerPlaying := #O 
+																						].
 															].
-													
-	^Error
+
+	self checkIfPlayerWon ifTrue: [^JuegoEstadoOver new].
 		! !
 
-!Juego methodsFor: 'movements' stamp: 'db 10/16/2019 20:28:07'!
+!Juego methodsFor: 'movements' stamp: 'db 10/16/2019 22:56:47'!
 putOAt: aPosition
     self putInPosition: aPosition fromPlayer: #O withOpponent: #X.
 
@@ -457,7 +496,7 @@ putXAt: aPosition
 ! !
 
 
-!Juego methodsFor: 'movements - private' stamp: 'db 10/16/2019 20:32:41'!
+!Juego methodsFor: 'movements - private' stamp: 'db 10/16/2019 21:41:44'!
 putInPosition: aPosition fromPlayer: actualPlayer withOpponent: opponentPlayer
     | currentPlayerPieces |
     isOver ifTrue:[^Juego ErrorGameIsOver].
@@ -471,15 +510,12 @@ putInPosition: aPosition fromPlayer: actualPlayer withOpponent: opponentPlayer
 
 	(board positionIsValid: aPosition) ifTrue: [(board positionIsFree: aPosition) ifTrue: [
 																					currentPlayerPieces at: (currentPlayerPieces findFirst: [:p | p = 0]) put: aPosition.
-																					
 																					board put: actualPlayer to: aPosition.
 																				] ifFalse:  [^Juego ErrorPositionOccuped ].
 										] ifFalse:[^Juego ErrorPositionInvalid ].
    									 
     self checkIfPlayerWon ifTrue: [self finishTheGame] ifFalse: [
-   	 
    															 playerPlaying := opponentPlayer.
-   	 
    														 ].
 
 ! !
@@ -493,6 +529,14 @@ Juego class
 !Juego class methodsFor: 'Errors' stamp: 'db 10/16/2019 19:33:51'!
 ErrorGameIsOver
 ^self error: 'Game is over'! !
+
+!Juego class methodsFor: 'Errors' stamp: 'db 10/16/2019 22:32:00'!
+ErrorMoveIsTooFar
+^self error:'Move is too far'! !
+
+!Juego class methodsFor: 'Errors' stamp: 'db 10/16/2019 22:31:01'!
+ErrorPieceIsNotFromPlayerPlaying
+^self error: 'Piece is not from player playing'.! !
 
 !Juego class methodsFor: 'Errors' stamp: 'db 10/16/2019 19:49:53'!
 ErrorPlayerHasNoMorePiecesToPut
@@ -510,6 +554,10 @@ ErrorPositionInvalid
 ErrorPositionInvalidOrOccuped
 	^self error: 'Position invalid or occuped'.! !
 
+!Juego class methodsFor: 'Errors' stamp: 'db 10/16/2019 22:29:40'!
+ErrorPositionIsEmpty
+^self error:'Position is empty'! !
+
 !Juego class methodsFor: 'Errors' stamp: 'db 10/16/2019 20:35:48'!
 ErrorPositionOccuped
 	^self error: 'Position occuped'! !
@@ -518,6 +566,67 @@ ErrorPositionOccuped
 !Juego class methodsFor: 'initialize' stamp: 'db 10/15/2019 20:40:49'!
 initialize
 ^self new initialize.! !
+
+
+!Juego class methodsFor: 'as yet unclassified' stamp: 'db 10/16/2019 21:39:41'!
+Error
+^self error:'El movimiento no es valido'! !
+
+
+!classDefinition: #JuegoEstadoMoverPiezas category: #TerniLapilli!
+Juego subclass: #JuegoEstadoMoverPiezas
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'TerniLapilli'!
+
+!JuegoEstadoMoverPiezas methodsFor: 'as yet unclassified' stamp: 'db 10/16/2019 22:47:06'!
+putInPosition: aPosition fromPlayer: actualPlayer withOpponent: opponentPlayer
+    | currentPlayerPieces |
+    isOver ifTrue:[^Juego ErrorGameIsOver].
+    playerPlaying = actualPlayer ifFalse: [^Juego ErrorPlayerIsNotMoving ].
+    playerPlaying =  #X ifTrue: [currentPlayerPieces := playerXPieces ] ifFalse:[currentPlayerPieces := playerOPieces ].
+
+    (currentPlayerPieces allSatisfy:[:piece | piece ~= 0]) ifTrue:[
+   												 ^ Juego ErrorPlayerHasNoMorePiecesToPut
+   											 ].
+
+
+	(board positionIsValid: aPosition) ifTrue: [(board positionIsFree: aPosition) ifTrue: [
+																					currentPlayerPieces at: (currentPlayerPieces findFirst: [:p | p = 0]) put: aPosition.
+																					board put: actualPlayer to: aPosition.
+																				] ifFalse:  [^Juego ErrorPositionOccuped ].
+										] ifFalse:[^Juego ErrorPositionInvalid ].
+   									 
+    self checkIfPlayerWon ifTrue: [self finishTheGame] ifFalse: [
+   															 playerPlaying := opponentPlayer.
+   														 ].
+
+! !
+
+
+!classDefinition: #JuegoEstadoOver category: #TerniLapilli!
+Juego subclass: #JuegoEstadoOver
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'TerniLapilli'!
+
+!JuegoEstadoOver methodsFor: 'as yet unclassified' stamp: 'db 10/16/2019 22:41:14'!
+doesNotUnderstand: aMessage
+	^self error: 'El juego finalizo'! !
+
+!JuegoEstadoOver methodsFor: 'as yet unclassified' stamp: 'db 10/16/2019 22:36:43'!
+isOver
+	^true! !
+
+
+!classDefinition: #JuegoEstadoPonerPiezas category: #TerniLapilli!
+Juego subclass: #JuegoEstadoPonerPiezas
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'TerniLapilli'!
 
 
 !classDefinition: #O category: #TerniLapilli!
