@@ -1,9 +1,17 @@
-!classDefinition: #CajeroTest category: #TusLibros stamp: 'g j 11/4/2019 21:09:02'!
+!classDefinition: #CajeroTest category: #TusLibros stamp: 'd b 11/6/2019 20:23:34'!
 TestCase subclass: #CajeroTest
 	instanceVariableNames: 'carty sellBooky cart sellBook'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'TusLibros'!
+
+!CajeroTest methodsFor: 'tests' stamp: 'd b 11/6/2019 20:18:50'!
+aBook
+	^'Juans Book'! !
+
+!CajeroTest methodsFor: 'tests' stamp: 'd b 11/6/2019 20:18:57'!
+anotherBook
+	^'Coso'! !
 
 !CajeroTest methodsFor: 'tests' stamp: 'g j 11/4/2019 19:15:43'!
 defaultCatalog
@@ -23,80 +31,96 @@ setUp
 	sellBook := OrderedCollection new.
 	! !
 
-!CajeroTest methodsFor: 'tests' stamp: 'g j 11/4/2019 20:25:42'!
+!CajeroTest methodsFor: 'tests' stamp: 'd b 11/6/2019 20:01:07'!
 test02CajeroCanNotCheckoutWithEmptyCart
 
 	| cajero creditCard |
 	
 	creditCard := Card initializeWithNumber: '123123' owner: 'ggg' expiration: (December of: 2040).
 	
-	cajero := Cajero with: cart andCreditCard: creditCard andHistoryBook: sellBook.
-	self should: [cajero checkoutOnADate: (FixedGregorianDate monthOfYear: (October of: 2020) dayNumber: 22)]
+	cajero := Cajero initializeWith: cart andCreditCard: creditCard andMerchantProcessor: MerchantProcessorSimulator new.
+	self should: [cajero checkoutOnADate: (FixedGregorianDate monthOfYear: (October of: 2020) dayNumber: 22) andRegisterOn: sellBook .]
 		raise: Error - MessageNotUnderstood 
 		withMessageText: Cajero CarritoVacio.
 	
 				! !
 
-!CajeroTest methodsFor: 'tests' stamp: 'g j 11/4/2019 20:29:22'!
+!CajeroTest methodsFor: 'tests' stamp: 'd b 11/6/2019 20:19:07'!
 test03CajeroNoPuedeCheckoutearTarjetaVencida
 
 	| cajero creditCard |
 
 	creditCard := Card initializeWithNumber:  '123654' owner: 'DBuzeta' expiration: (October of: 2015). 	
 	
-	cart add: 'Juans Book'.
+	cart add: self aBook.
 	
 	
-	cajero := Cajero with: cart andCreditCard: creditCard andHistoryBook: sellBook. 
+	cajero := Cajero initializeWith: cart andCreditCard: creditCard andMerchantProcessor: MerchantProcessorSimulator new.
 	
-	self should: [ cajero checkoutOnADate: (FixedGregorianDate monthOfYear: (October of: 2020) dayNumber: 22)]
+	self should: [ cajero checkoutOnADate: (FixedGregorianDate monthOfYear: (October of: 2020) dayNumber: 22) andRegisterOn: sellBook.]
 		raise: Error - MessageNotUnderstood 
 		withMessageText: Cajero TarjetaVencida.! !
 
-!CajeroTest methodsFor: 'tests' stamp: 'g j 11/4/2019 20:46:38'!
+!CajeroTest methodsFor: 'tests' stamp: 'd b 11/6/2019 20:19:14'!
 test04CajeroVendeLibroYElMontoCobradoEsElPrecioDelLibro
 
 	| cajero creditCard valorVenta |
 	
-	cart add: 'Juans Book'.
+	cart add: self aBook.
 	
 	creditCard := Card initializeWithNumber: '123123' owner: 'ggg' expiration: (December of: 2040).
 	
-	cajero := Cajero with: cart andCreditCard: creditCard andHistoryBook: sellBook.
-	valorVenta := cajero checkoutOnADate: (FixedGregorianDate monthOfYear: (October of: 2020) dayNumber: 22).
+	cajero := Cajero initializeWith: cart andCreditCard: creditCard andMerchantProcessor: MerchantProcessorSimulator new.
+	valorVenta := cajero checkoutOnADate: (FixedGregorianDate monthOfYear: (October of: 2020) dayNumber: 22) andRegisterOn: sellBook .
 	
 	self assert: 200 equals: valorVenta. 
 	
 				! !
 
-!CajeroTest methodsFor: 'tests' stamp: 'g j 11/4/2019 20:38:55'!
+!CajeroTest methodsFor: 'tests' stamp: 'd b 11/6/2019 20:19:23'!
 test05CajeroAñadeNuevoRegistroALibroDeVentas
 
 	| cajero creditCard |
 	
-	cart add: 'Juans Book'.
+	cart add: self aBook .
 	
 	creditCard := Card initializeWithNumber: '123123' owner: 'ggg' expiration: (December of: 2040).
 	
 	self assert: sellBook isEmpty.
 	
-	cajero := Cajero with: cart andCreditCard: creditCard andHistoryBook: sellBook.
-	cajero checkoutOnADate: (FixedGregorianDate monthOfYear: (October of: 2020) dayNumber: 22).
+	cajero := Cajero initializeWith: cart andCreditCard: creditCard andMerchantProcessor: MerchantProcessorSimulator new.
+	cajero checkoutOnADate: (FixedGregorianDate monthOfYear: (October of: 2020) dayNumber: 22) andRegisterOn: sellBook .
 	
 	self assert: 1 equals: sellBook size.
-	
+	self assert: 'Juans Book' equals: (sellBook at: 1).
 				! !
 
+!CajeroTest methodsFor: 'tests' stamp: 'd b 11/6/2019 20:19:34'!
+test06CajeroVendeDosLibrosYFiguranEnElLibro
+
+	| cajero creditCard |
+	
+	cart add: self aBook .
+	cart add: self anotherBook .
+	creditCard := Card initializeWithNumber: '123123' owner: 'ggg' expiration: (December of: 2040).
+
+	cajero := Cajero initializeWith: cart andCreditCard: creditCard andMerchantProcessor: MerchantProcessorSimulator new.
+	cajero checkoutOnADate: (FixedGregorianDate monthOfYear: (October of: 2020) dayNumber: 22) andRegisterOn: sellBook .
+	
+	self assert: 2 equals: sellBook size.
+	self assert: sellBook includes: 'Juans Book'.
+	self assert: sellBook includes:'Coso'.
+				! !
 
 
-!classDefinition: #CardTest category: #TusLibros stamp: 'g j 11/4/2019 21:09:02'!
+!classDefinition: #CardTest category: #TusLibros stamp: 'd b 11/6/2019 20:23:34'!
 TestCase subclass: #CardTest
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'TusLibros'!
 
-!CardTest methodsFor: 'as yet unclassified' stamp: 'g j 11/4/2019 18:44:01'!
+!CardTest methodsFor: 'tests' stamp: 'g j 11/4/2019 18:44:01'!
 test01NumeroDeTarjetaSoloPuedeTenerNumeros
 
 	self 
@@ -104,14 +128,14 @@ test01NumeroDeTarjetaSoloPuedeTenerNumeros
 			raise: Error - MessageNotUnderstood 
 				withMessageText: Card ErrorNumber.! !
 
-!CardTest methodsFor: 'as yet unclassified' stamp: 'd b 11/3/2019 21:24:45'!
+!CardTest methodsFor: 'tests' stamp: 'd b 11/3/2019 21:24:45'!
 test02NumeroDeTarjetaNoPuedeSerVacio
 	self 
 		should: [Card initializeWithNumber: '' owner: 'gonzalo' expiration: (October  of: 2020)] 
 			raise: Error - MessageNotUnderstood 
 				withMessageText: Card ErrorNumber.! !
 
-!CardTest methodsFor: 'as yet unclassified' stamp: 'd b 11/3/2019 21:26:17'!
+!CardTest methodsFor: 'tests' stamp: 'd b 11/3/2019 21:26:17'!
 test03DueñoDeTarjetaNoPuedeSerVacio
 	self 
 		should: [Card initializeWithNumber: '213' owner: '' expiration: (October  of: 2020)] 
@@ -119,7 +143,7 @@ test03DueñoDeTarjetaNoPuedeSerVacio
 				withMessageText: Card ErrorOwner.! !
 
 
-!classDefinition: #CartTest category: #TusLibros stamp: 'g j 11/4/2019 21:09:02'!
+!classDefinition: #CartTest category: #TusLibros stamp: 'd b 11/6/2019 20:23:34'!
 TestCase subclass: #CartTest
 	instanceVariableNames: ''
 	classVariableNames: ''
@@ -284,80 +308,57 @@ itemSellByTheStore
 	^ 'Juans Book'! !
 
 
-!classDefinition: #Cajero category: #TusLibros stamp: 'g j 11/4/2019 21:09:02'!
+!classDefinition: #Cajero category: #TusLibros stamp: 'd b 11/6/2019 20:23:34'!
 Object subclass: #Cajero
-	instanceVariableNames: 'priceList items cart card sellBook'
+	instanceVariableNames: 'cart card merchantProcessorSimulator'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'TusLibros'!
 
-!Cajero methodsFor: 'as yet unclassified' stamp: 'd b 11/2/2019 23:29:31'!
+!Cajero methodsFor: 'testing' stamp: 'd b 11/2/2019 23:30:18'!
+isEmpty
+	^items size = 0.! !
+
+
+!Cajero methodsFor: 'assertions' stamp: 'g j 11/4/2019 20:28:36'!
+assertCarritoNoVacio
+	cart isEmpty ifTrue: [self error: Cajero CarritoVacio.]! !
+
+!Cajero methodsFor: 'assertions' stamp: 'g j 11/4/2019 19:45:02'!
+assertTarjetaNoVencida
+	(card expiredOn: GregorianMonthOfYear current) ifTrue:[^self error: Cajero TarjetaVencida].! !
+
+!Cajero methodsFor: 'assertions' stamp: 'g j 11/4/2019 19:57:54'!
+assertTarjetaNoVencida: aDate
+	(card expiredOn: aDate) ifTrue: [^self error: Cajero TarjetaVencida].! !
+
+
+!Cajero methodsFor: 'initialization' stamp: 'd b 11/6/2019 19:58:51'!
+initializeWith: aCart andCreditCard: aCard andMerchantProcessor: MerchantProcessorSimulator.
+	cart := aCart.
+	card := aCard.
+	merchantProcessorSimulator:=MerchantProcessorSimulator.! !
+
+
+!Cajero methodsFor: 'accessing' stamp: 'd b 11/2/2019 23:29:31'!
 addItems: aListOfBooks
 	items := aListOfBooks.
 	! !
 
-!Cajero methodsFor: 'as yet unclassified' stamp: 'g j 11/4/2019 20:28:36'!
-assertCarritoNoVacio
-	cart isEmpty ifTrue: [self error: Cajero CarritoVacio.]! !
-
-!Cajero methodsFor: 'as yet unclassified' stamp: 'g j 11/4/2019 19:27:46'!
-checkOutWithCardNumber: aStringOfCardNumber owner: aName expirationDate: aGregorianMonthOfYear
-	
-	
-	| cardd |
-	cardd := Card initializeWithNumber: aStringOfCardNumber owner: aName  expiration: aGregorianMonthOfYear .
-	
-	^self.! !
-
-!Cajero methodsFor: 'as yet unclassified' stamp: 'd b 11/2/2019 23:32:54'!
-initializeWithPriceList: aPriceList
-	aPriceList isEmpty ifTrue: [^self error: Cajero ErrorPriceListNeeded ].
-	priceList := aPriceList.
-	items := OrderedCollection new.
-	^self.! !
-
-!Cajero methodsFor: 'as yet unclassified' stamp: 'd b 11/2/2019 23:30:18'!
-isEmpty
-	^items size = 0.! !
-
-!Cajero methodsFor: 'as yet unclassified' stamp: 'd b 11/2/2019 23:34:35'!
-itemCount
-	^items size! !
-
-
-!Cajero methodsFor: '*Aconcagua-Extensions' stamp: 'g j 11/4/2019 19:27:58'!
-initializeWith: aCart andCreditCard: aCard 
-	self shouldBeImplemented.
-	cart := aCart.
-	card := aCard.! !
-
-
-!Cajero methodsFor: 'initialization' stamp: 'g j 11/4/2019 19:31:47'!
-initializeWith: aCart andCreditCard: aCard andHistoryBook: aSellBook 
-	cart := aCart.
-	card := aCard.
-	sellBook := aSellBook.! !
-
-
-!Cajero methodsFor: 'casing' stamp: 'g j 11/4/2019 20:35:55'!
-checkoutOnADate: aDate
+!Cajero methodsFor: 'accessing' stamp: 'd b 11/6/2019 20:18:12'!
+checkoutOnADate: aDate andRegisterOn: historyLog 
+	| response |
 	self assertCarritoNoVacio.
 	self assertTarjetaNoVencida: aDate.
+	merchantProcessorSimulator transactionWithcreditCardNumber: (card number) creditCardExpiration: card expiration creditCarOwner: card owner transactionAmount: cart montoTotal.
+
+	cart forEachElementApply: [:element | historyLog add: element].
 	^cart montoTotal.
 	! !
 
-
-!Cajero methodsFor: 'binding' stamp: 'g j 11/4/2019 19:45:02'!
-assertTarjetaNoVencida
-	(card expiredOn: GregorianMonthOfYear current) ifTrue:[^self error: Cajero TarjetaVencida].! !
-
-!Cajero methodsFor: 'binding' stamp: 'g j 11/4/2019 19:57:54'!
-assertTarjetaNoVencida: aDate
-	(card expiredOn: aDate) ifTrue: [^self error: Cajero TarjetaVencida].! !
-
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'Cajero class' category: #TusLibros stamp: 'g j 11/4/2019 21:09:02'!
+!classDefinition: 'Cajero class' category: #TusLibros stamp: 'd b 11/6/2019 20:23:34'!
 Cajero class
 	instanceVariableNames: ''!
 
@@ -378,13 +379,9 @@ ErrorPriceListNeeded
 	^'Es necesario una lista de precios no vacia'! !
 
 
-!Cajero class methodsFor: 'instance creation' stamp: 'g j 11/4/2019 19:20:37'!
-with: aCart andCreditCard: aCard 
-	^self new initializeWith: aCart andCreditCard: aCard ! !
-
-!Cajero class methodsFor: 'instance creation' stamp: 'g j 11/4/2019 19:31:32'!
-with: aCart andCreditCard: aCard andHistoryBook: aSellBook 
-	^self new initializeWith: aCart andCreditCard: aCard andHistoryBook: aSellBook! !
+!Cajero class methodsFor: 'instance creation' stamp: 'd b 11/6/2019 20:00:02'!
+initializeWith: aCart andCreditCard: aCard andMerchantProcessor: MerchantProcessorSimulator.
+	^self new initializeWith: aCart andCreditCard: aCard andMerchantProcessor: MerchantProcessorSimulator.! !
 
 
 !Cajero class methodsFor: 'error messages' stamp: 'g j 11/4/2019 19:32:49'!
@@ -397,36 +394,33 @@ CarritoVacio
 	^'El carrito esta vacio.'! !
 
 
-!classDefinition: #Card category: #TusLibros stamp: 'g j 11/4/2019 21:09:02'!
+!classDefinition: #Card category: #TusLibros stamp: 'd b 11/6/2019 20:23:34'!
 Object subclass: #Card
 	instanceVariableNames: 'creditNumber expiration owner'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'TusLibros'!
 
-!Card methodsFor: 'as yet unclassified' stamp: 'd b 11/3/2019 21:40:39'!
+!Card methodsFor: 'assertions' stamp: 'd b 11/3/2019 21:40:39'!
 assertFechaEstaVigente: aGregorianMonthOfYear
 		
 	(aGregorianMonthOfYear > (GregorianMonthOfYear current)) ifFalse: [^self error: Card ErrorExpirationDate ].
 ! !
 
-!Card methodsFor: 'as yet unclassified' stamp: 'd b 11/3/2019 21:25:44'!
+!Card methodsFor: 'assertions' stamp: 'd b 11/3/2019 21:25:44'!
 assertNumberIsValid: aString
 	
 	(aString allSatisfy: [:char | char isDigit]) & (aString isEmpty= false) ifFalse: [^self error: Card ErrorNumber ].
 	! !
 
-!Card methodsFor: 'as yet unclassified' stamp: 'd b 11/3/2019 21:32:06'!
+!Card methodsFor: 'assertions' stamp: 'd b 11/3/2019 21:32:06'!
 assertOwnerIsValid: aString
 	
 	(aString allSatisfy: [:char | char isLetter]) & (aString isEmpty= false) & (aString size <= 30) ifFalse: [^self error: Card ErrorOwner ].
 	! !
 
-!Card methodsFor: 'as yet unclassified' stamp: 'g j 11/4/2019 20:13:30'!
-expiredOn: aDateToCompare 
-	^ expiration < aDateToCompare monthOfYear.! !
 
-!Card methodsFor: 'as yet unclassified' stamp: 'g j 11/4/2019 19:20:05'!
+!Card methodsFor: 'init' stamp: 'g j 11/4/2019 19:20:05'!
 initializeWithNumber: aNumber owner: aName expiration: aGregorianMonthOfYear 
 	self assertNumberIsValid: aNumber.
 	self assertOwnerIsValid: aName.
@@ -435,9 +429,27 @@ initializeWithNumber: aNumber owner: aName expiration: aGregorianMonthOfYear
 	creditNumber  := aNumber .
 	^self.! !
 
+
+!Card methodsFor: 'queries' stamp: 'd b 11/6/2019 19:46:40'!
+expiration
+	^expiration! !
+
+!Card methodsFor: 'queries' stamp: 'g j 11/4/2019 20:13:30'!
+expiredOn: aDateToCompare 
+	^ expiration < aDateToCompare monthOfYear.! !
+
+!Card methodsFor: 'queries' stamp: 'd b 11/6/2019 19:41:37'!
+number
+	^creditNumber ! !
+
+!Card methodsFor: 'queries' stamp: 'd b 11/6/2019 19:41:29'!
+owner
+	^owner
+	! !
+
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'Card class' category: #TusLibros stamp: 'g j 11/4/2019 21:09:02'!
+!classDefinition: 'Card class' category: #TusLibros stamp: 'd b 11/6/2019 20:23:34'!
 Card class
 	instanceVariableNames: ''!
 
@@ -459,7 +471,7 @@ initializeWithNumber: aNumber owner: aName expiration: aGregorianMonthOfYear
 	^self new initializeWithNumber: aNumber owner: aName expiration: aGregorianMonthOfYear.! !
 
 
-!classDefinition: #Cart category: #TusLibros stamp: 'g j 11/4/2019 21:09:02'!
+!classDefinition: #Cart category: #TusLibros stamp: 'd b 11/6/2019 20:23:34'!
 Object subclass: #Cart
 	instanceVariableNames: 'catalog items montoTotal'
 	classVariableNames: ''
@@ -495,6 +507,10 @@ initializeAcceptingItemsOf: aCatalog
 	catalog := aCatalog.
 	items := OrderedCollection new.! !
 
+
+!Cart methodsFor: 'queries' stamp: 'd b 11/5/2019 21:56:29'!
+forEachElementApply: aBlockToApply
+	items do: aBlockToApply.! !
 
 !Cart methodsFor: 'queries' stamp: 'HernanWilkinson 6/17/2013 17:45'!
 occurrencesOf: anItem
@@ -535,7 +551,7 @@ add: aQuantity of: anItem
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'Cart class' category: #TusLibros stamp: 'g j 11/4/2019 21:09:02'!
+!classDefinition: 'Cart class' category: #TusLibros stamp: 'd b 11/6/2019 20:23:34'!
 Cart class
 	instanceVariableNames: ''!
 
@@ -543,3 +559,25 @@ Cart class
 acceptingItemsOf: aCatalog
 
 	^self new initializeAcceptingItemsOf: aCatalog ! !
+
+
+!classDefinition: #MerchantProcessorSimulator category: #TusLibros stamp: 'd b 11/6/2019 20:23:34'!
+Object subclass: #MerchantProcessorSimulator
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'TusLibros'!
+
+!MerchantProcessorSimulator methodsFor: 'init' stamp: 'd b 11/6/2019 20:15:47'!
+transactionWithcreditCardNumber: aCreditCarNumber creditCardExpiration: aMonthAndYear creditCarOwner: aString transactionAmount: anAmount
+	^anAmount ! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'MerchantProcessorSimulator class' category: #TusLibros stamp: 'd b 11/6/2019 20:23:34'!
+MerchantProcessorSimulator class
+	instanceVariableNames: ''!
+
+!MerchantProcessorSimulator class methodsFor: 'as yet unclassified' stamp: 'd b 11/6/2019 20:08:23'!
+transactionWithcreditCardNumber: aCreditCarNumber creditCardExpiration: aMonthAndYear creditCarOwner: aString transactionAmount: anAmount
+	^self new creditCardNumber: aCreditCarNumber creditCardExpiration: aMonthAndYear creditCarOwner: aString transactionAmount: anAmount.! !
