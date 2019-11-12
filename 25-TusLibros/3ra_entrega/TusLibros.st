@@ -1,4 +1,4 @@
-!classDefinition: #CartTest category: #TusLibros stamp: 'g j 11/7/2019 20:59:09'!
+!classDefinition: #CartTest category: #TusLibros stamp: 'g j 11/11/2019 21:06:48'!
 TestCase subclass: #CartTest
 	instanceVariableNames: 'testObjectsFactory'
 	classVariableNames: ''
@@ -98,7 +98,7 @@ setUp
 	testObjectsFactory := StoreTestObjectsFactory new.! !
 
 
-!classDefinition: #CashierTest category: #TusLibros stamp: 'g j 11/7/2019 20:59:09'!
+!classDefinition: #CashierTest category: #TusLibros stamp: 'g j 11/11/2019 21:06:48'!
 TestCase subclass: #CashierTest
 	instanceVariableNames: 'testObjectsFactory debitBehavior'
 	classVariableNames: ''
@@ -246,35 +246,40 @@ debit: anAmount from: aCreditCard
 	^debitBehavior value: anAmount value: aCreditCard ! !
 
 
-!classDefinition: #XXXTest category: #TusLibros stamp: 'g j 11/7/2019 20:59:09'!
+!classDefinition: #XXXTest category: #TusLibros stamp: 'g j 11/11/2019 21:06:48'!
 TestCase subclass: #XXXTest
-	instanceVariableNames: 'testObjectsFactory'
+	instanceVariableNames: 'testObjectsFactory debitBehavior'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'TusLibros'!
 
-!XXXTest methodsFor: 'as yet unclassified' stamp: 'g j 11/7/2019 19:22:02'!
+!XXXTest methodsFor: 'as yet unclassified' stamp: 'g j 11/11/2019 18:44:06'!
+debit: anAmount from: aCreditCard 
+
+	^debitBehavior value: anAmount value: aCreditCard 
+	! !
+
+!XXXTest methodsFor: 'as yet unclassified' stamp: 'g j 11/11/2019 18:43:04'!
 setUp 
 
-	testObjectsFactory := StoreTestObjectsFactory new.! !
+	testObjectsFactory := StoreTestObjectsFactory new.
+	debitBehavior := [ :anAmount :aCreditCard | ].! !
 
-!XXXTest methodsFor: 'as yet unclassified' stamp: 'g j 11/7/2019 20:56:31'!
+!XXXTest methodsFor: 'as yet unclassified' stamp: 'g j 11/11/2019 17:41:05'!
 test01CreandoUnNuevoCarritoYEsDevueltoPorListCarts
 
-	| newCartId xxx auth |
-	auth := ValidAuthenticator new.
-	xxx := XXX withCatalog: testObjectsFactory defaultCatalog withAuthenticator: auth.
+	| newCartId xxx |
+	xxx := XXX withCatalog: testObjectsFactory defaultCatalog.
 	
 	newCartId := xxx createCartForId: 2 withPassword: 'keloke'.
 	
 	self assert: (xxx listCartWithId: newCartId) isEmpty.! !
 
-!XXXTest methodsFor: 'as yet unclassified' stamp: 'g j 11/7/2019 20:56:19'!
+!XXXTest methodsFor: 'as yet unclassified' stamp: 'g j 11/11/2019 17:42:39'!
 test02SeAgregaUnLibroAlCarritoYAlListarloAparece
 
-	| newCartId xxx libros auth |
-	auth := ValidAuthenticator new.
-	xxx := XXX withCatalog: testObjectsFactory defaultCatalog withAuthenticator: auth.
+	| newCartId xxx libros |
+	xxx := XXX withCatalog: testObjectsFactory defaultCatalog.
 	
 	newCartId := xxx createCartForId: 2 withPassword: 'keloke'.
 	
@@ -286,12 +291,11 @@ test02SeAgregaUnLibroAlCarritoYAlListarloAparece
 	self assert: 1 equals: libros size.
 	self assert: 1 equals: (libros at: testObjectsFactory itemSellByTheStore).! !
 
-!XXXTest methodsFor: 'as yet unclassified' stamp: 'g j 11/7/2019 20:54:16'!
+!XXXTest methodsFor: 'as yet unclassified' stamp: 'g j 11/11/2019 17:42:20'!
 test03NoSePuedeCrearUnCarritoConUnUsuarioInvalido
 
-	| xxx auth |
-	auth := InvalidAuthenticator new.
-	xxx := XXX withCatalog: testObjectsFactory defaultCatalog withAuthenticator: auth.
+	| xxx |
+	xxx := XXX withCatalog: testObjectsFactory defaultCatalog.
 	
 	
 	self should: [xxx createCartForId: 4 withPassword: 'keloke'.]
@@ -299,46 +303,112 @@ test03NoSePuedeCrearUnCarritoConUnUsuarioInvalido
 		withMessageText: XXX usuarioInvalido.
 ! !
 
+!XXXTest methodsFor: 'as yet unclassified' stamp: 'g j 11/11/2019 17:57:21'!
+test04SeCreanDosCarritosYAmbosSonDevueltosPorListCart
+
+	| xxx cart1Id cart2Id libros1 libros2 |
+	xxx := XXX withCatalog: testObjectsFactory defaultCatalog.
+	
+	
+	cart1Id := xxx createCartForId: 2 withPassword: 'keloke'.
+	cart2Id := xxx createCartForId: 2 withPassword: 'keloke'.
+	
+	xxx addToCartWithId: cart1Id withISBN: testObjectsFactory itemSellByTheStore withQuantity: 1.
+	
+	libros1 := (xxx listCartWithId: cart1Id).
+	
+	libros2 := (xxx listCartWithId: cart2Id).
+	
+	self assert: 1 equals: libros1 size.
+	self assert: 1 equals: (libros1 at: testObjectsFactory itemSellByTheStore).
+	
+	self assert: libros2 isEmpty.! !
+
+!XXXTest methodsFor: 'as yet unclassified' stamp: 'g j 11/11/2019 18:06:12'!
+test05SeCreanDosCarritosDeDiferentesUsuariosYSonDistintos
+
+	| xxx cart1Id cart2Id libros1 libros2 |
+	xxx := XXX withCatalog: testObjectsFactory defaultCatalog.
+	
+	
+	cart1Id := xxx createCartForId: 2 withPassword: 'keloke'.
+	cart2Id := xxx createCartForId: 3 withPassword: 'jajaja'.
+	
+	xxx addToCartWithId: cart1Id withISBN: testObjectsFactory itemSellByTheStore withQuantity: 1.
+	xxx addToCartWithId: cart1Id withISBN: testObjectsFactory anotherItemSellByTheStore withQuantity: 1.
+	
+	xxx addToCartWithId: cart2Id withISBN: testObjectsFactory itemSellByTheStore withQuantity: 1.
+	
+	libros1 := (xxx listCartWithId: cart1Id).
+	
+	libros2 := (xxx listCartWithId: cart2Id).
+	
+	self assert: 2 equals: libros1 size.
+	self assert: 1 equals: (libros1 at: testObjectsFactory itemSellByTheStore).
+	self assert: 1 equals: (libros1 at: testObjectsFactory anotherItemSellByTheStore ).
+	
+	self assert: 1 equals: libros2 size.
+	self assert: 1 equals: (libros2 at: testObjectsFactory itemSellByTheStore).! !
+
+!XXXTest methodsFor: 'as yet unclassified' stamp: 'g j 11/11/2019 20:55:03'!
+test06NoSePuedeCheckoutearUnCarritoInexistente
+
+	| xxx |
+	xxx := XXX withCatalog: testObjectsFactory defaultCatalog.
+	
+	self should: [xxx checkoutWithCartId: #id
+		on: testObjectsFactory today
+		 aCreditCardNumber: '113584'
+		 anExpirationDate: testObjectsFactory notExpiredDate
+		 andOwnerName: 'Dario'.]
+	raise: Error - MessageNotUnderstood
+	withMessageText: XXX CarritoInexistente.! !
+
+!XXXTest methodsFor: 'as yet unclassified' stamp: 'g j 11/11/2019 20:54:58'!
+test07NoSePuedeCheckoutearUnCarritoVacio
+
+	| xxx cartId |
+	xxx := XXX withCatalog: testObjectsFactory defaultCatalog throught: self.
+	
+	cartId := xxx createCartForId: 2 withPassword: 'keloke'.
+	
+	
+	self should: [xxx checkoutWithCartId: cartId
+		 on: testObjectsFactory today
+		 aCreditCardNumber: '123456' 
+		 anExpirationDate: testObjectsFactory notExpiredDate
+		 andOwnerName: 'Carlitos'.]
+	raise: Error - MessageNotUnderstood
+	withMessageText: Cashier cartCanNotBeEmptyErrorMessage.
+	
+	! !
+
+!XXXTest methodsFor: 'as yet unclassified' stamp: 'g j 11/11/2019 20:54:49'!
+test08DespuesDeCheckoutearElUsuarioTieneUnaCompra
+
+	| xxx cartId listaCompras |
+	xxx := XXX withCatalog: testObjectsFactory defaultCatalog throught: self.
+	
+	cartId := xxx createCartForId: 2 withPassword: 'keloke'.
+	
+	xxx addToCartWithId: cartId withISBN: testObjectsFactory itemSellByTheStore withQuantity: 1.
+	
+	xxx checkoutWithCartId: cartId
+	on: testObjectsFactory today 
+	aCreditCardNumber: '123456'
+	anExpirationDate: testObjectsFactory notExpiredDate 
+	andOwnerName: 'Carlitos'.
+	
+	listaCompras := xxx listPurchasesForUserId: 2 withPassword: 'keloke'.
+	
+	self assert:(listaCompras at: testObjectsFactory itemNotSellByTheStore ) = 1.
+	
+	! !
+
 
-!classDefinition: #Authenticator category: #TusLibros stamp: 'g j 11/7/2019 20:59:09'!
-Object subclass: #Authenticator
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'TusLibros'!
-
-!Authenticator methodsFor: 'as yet unclassified' stamp: 'g j 11/7/2019 20:53:10'!
-authWithId: anId andPass: aPassword
-^self subclassResponsibility.! !
-
-
-!classDefinition: #InvalidAuthenticator category: #TusLibros stamp: 'g j 11/7/2019 20:59:09'!
-Authenticator subclass: #InvalidAuthenticator
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'TusLibros'!
-
-!InvalidAuthenticator methodsFor: 'as yet unclassified' stamp: 'g j 11/7/2019 20:54:54'!
-authWithId: anId andPass: aPassword
-^false.! !
-
-
-!classDefinition: #ValidAuthenticator category: #TusLibros stamp: 'g j 11/7/2019 20:59:09'!
-Authenticator subclass: #ValidAuthenticator
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'TusLibros'!
-
-!ValidAuthenticator methodsFor: 'as yet unclassified' stamp: 'g j 11/7/2019 20:56:49'!
-authWithId: anId andPass: aPassword
-^true.! !
-
-
-!classDefinition: #Cart category: #TusLibros stamp: 'g j 11/7/2019 20:59:09'!
+!classDefinition: #Cart category: #TusLibros stamp: 'g j 11/11/2019 21:06:48'!
 Object subclass: #Cart
-	instanceVariableNames: 'catalog items id'
+	instanceVariableNames: 'catalog items'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'TusLibros'!
@@ -364,6 +434,12 @@ assertIsValidQuantity: aQuantity
 
 	aQuantity strictlyPositive ifFalse: [ self error: self invalidQuantityErrorMessage ]! !
 
+
+!Cart methodsFor: 'initialization' stamp: 'g j 11/11/2019 17:36:00'!
+initializeAcceptingItemsOf: aCatalog
+
+	catalog := aCatalog.
+	items := OrderedCollection new.! !
 
 !Cart methodsFor: 'initialization' stamp: 'g j 11/7/2019 20:08:32'!
 initializeAcceptingItemsOf: aCatalog withId: anId 
@@ -410,26 +486,27 @@ add: aQuantity of: anItem
 	1 to: aQuantity do: [ :aNumber | items add: anItem ]! !
 
 
-!Cart methodsFor: 'as yet unclassified' stamp: 'g j 11/7/2019 20:11:19'!
-id
-	^id! !
-
-!Cart methodsFor: 'as yet unclassified' stamp: 'g j 11/7/2019 20:37:44'!
+!Cart methodsFor: 'as yet unclassified' stamp: 'g j 11/11/2019 18:11:06'!
 listBooks
 	| listedBooks |
 	listedBooks := Dictionary new.
 	items do: [:anItem | 
 		(listedBooks allSatisfy: [
-									:aBook | aBook first ~=anItem]) ifTrue: [
+									:aBook | (listedBooks keyAtValue: aBook) ~=anItem]) ifTrue: [
 			 																		listedBooks add:(anItem -> (items occurrencesOf: anItem))]].
 																			
 	^listedBooks.! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'Cart class' category: #TusLibros stamp: 'g j 11/7/2019 20:59:09'!
+!classDefinition: 'Cart class' category: #TusLibros stamp: 'g j 11/11/2019 21:06:48'!
 Cart class
 	instanceVariableNames: ''!
+
+!Cart class methodsFor: 'instance creation' stamp: 'g j 11/11/2019 17:35:42'!
+acceptingItemsOf: aCatalog
+
+	^self new initializeAcceptingItemsOf: aCatalog! !
 
 !Cart class methodsFor: 'instance creation' stamp: 'g j 11/7/2019 20:08:23'!
 acceptingItemsOf: aCatalog withId: anId 
@@ -437,7 +514,7 @@ acceptingItemsOf: aCatalog withId: anId
 	^self new initializeAcceptingItemsOf: aCatalog withId: 1 ! !
 
 
-!classDefinition: #Cashier category: #TusLibros stamp: 'g j 11/7/2019 20:59:09'!
+!classDefinition: #Cashier category: #TusLibros stamp: 'g j 11/11/2019 21:06:48'!
 Object subclass: #Cashier
 	instanceVariableNames: 'cart salesBook merchantProcessor creditCard total'
 	classVariableNames: ''
@@ -488,7 +565,7 @@ initializeToCheckout: aCart charging: aCreditCard throught: aMerchantProcessor r
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'Cashier class' category: #TusLibros stamp: 'g j 11/7/2019 20:59:09'!
+!classDefinition: 'Cashier class' category: #TusLibros stamp: 'g j 11/11/2019 21:06:48'!
 Cashier class
 	instanceVariableNames: ''!
 
@@ -528,7 +605,7 @@ creditCardHasNoCreditErrorMessage
 	^'Credit card has no credit'! !
 
 
-!classDefinition: #CreditCard category: #TusLibros stamp: 'g j 11/7/2019 20:59:09'!
+!classDefinition: #CreditCard category: #TusLibros stamp: 'g j 11/11/2019 21:06:48'!
 Object subclass: #CreditCard
 	instanceVariableNames: 'expiration'
 	classVariableNames: ''
@@ -546,9 +623,10 @@ initializeExpiringOn: aMonth
 	
 	expiration := aMonth ! !
 
+
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'CreditCard class' category: #TusLibros stamp: 'g j 11/7/2019 20:59:09'!
+!classDefinition: 'CreditCard class' category: #TusLibros stamp: 'g j 11/11/2019 21:06:48'!
 CreditCard class
 	instanceVariableNames: ''!
 
@@ -558,9 +636,9 @@ expiringOn: aMonth
 	^self new initializeExpiringOn: aMonth! !
 
 
-!classDefinition: #Sale category: #TusLibros stamp: 'g j 11/7/2019 20:59:09'!
+!classDefinition: #Sale category: #TusLibros stamp: 'g j 11/11/2019 21:06:48'!
 Object subclass: #Sale
-	instanceVariableNames: 'total'
+	instanceVariableNames: 'total saleItems'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'TusLibros'!
@@ -571,14 +649,15 @@ total
 	^ total! !
 
 
-!Sale methodsFor: 'initialization' stamp: 'HernanWilkinson 6/17/2013 18:47'!
+!Sale methodsFor: 'initialization' stamp: 'g j 11/11/2019 20:51:11'!
 initializeTotal: aTotal
 
-	total := aTotal ! !
+	total := aTotal.
+	saleItems := Dictionary new.! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'Sale class' category: #TusLibros stamp: 'g j 11/7/2019 20:59:09'!
+!classDefinition: 'Sale class' category: #TusLibros stamp: 'g j 11/11/2019 21:06:48'!
 Sale class
 	instanceVariableNames: ''!
 
@@ -589,12 +668,22 @@ of: aTotal
 	^self new initializeTotal: aTotal ! !
 
 
-!classDefinition: #StoreTestObjectsFactory category: #TusLibros stamp: 'g j 11/7/2019 20:59:09'!
+!classDefinition: #StoreTestObjectsFactory category: #TusLibros stamp: 'g j 11/11/2019 21:06:48'!
 Object subclass: #StoreTestObjectsFactory
 	instanceVariableNames: 'today'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'TusLibros'!
+
+!StoreTestObjectsFactory methodsFor: 'items' stamp: 'g j 11/11/2019 18:01:16'!
+anotherItemSellByTheStore
+	
+	^ 'anotherValidBook'! !
+
+!StoreTestObjectsFactory methodsFor: 'items' stamp: 'g j 11/11/2019 18:01:33'!
+anotherItemSellByTheStorePrice
+	
+	^33! !
 
 !StoreTestObjectsFactory methodsFor: 'items' stamp: 'HernanWilkinson 6/17/2013 18:08'!
 itemNotSellByTheStore
@@ -612,16 +701,17 @@ itemSellByTheStorePrice
 	^10! !
 
 
-!StoreTestObjectsFactory methodsFor: 'cart' stamp: 'g j 11/7/2019 20:07:10'!
+!StoreTestObjectsFactory methodsFor: 'cart' stamp: 'g j 11/11/2019 17:36:21'!
 createCart
 	
-	^Cart acceptingItemsOf: self defaultCatalog withId: 1! !
+	^Cart acceptingItemsOf: self defaultCatalog! !
 
-!StoreTestObjectsFactory methodsFor: 'cart' stamp: 'HernanWilkinson 6/17/2013 18:08'!
+!StoreTestObjectsFactory methodsFor: 'cart' stamp: 'g j 11/11/2019 18:02:27'!
 defaultCatalog
 	
 	^ Dictionary new
 		at: self itemSellByTheStore put: self itemSellByTheStorePrice;
+		at: self anotherItemSellByTheStore put: self anotherItemSellByTheStorePrice;
 		yourself ! !
 
 
@@ -642,15 +732,20 @@ initialize
 	today := DateAndTime now! !
 
 
+!StoreTestObjectsFactory methodsFor: 'date' stamp: 'g j 11/11/2019 20:54:29'!
+notExpiredDate
+
+^(Month month: self today monthIndex year: self today yearNumber + 1).! !
+
 !StoreTestObjectsFactory methodsFor: 'date' stamp: 'HernanWilkinson 6/17/2013 18:37'!
 today
 	
 	^ today! !
 
 
-!classDefinition: #XXX category: #TusLibros stamp: 'g j 11/7/2019 20:59:09'!
+!classDefinition: #XXX category: #TusLibros stamp: 'g j 11/11/2019 21:06:48'!
 Object subclass: #XXX
-	instanceVariableNames: 'catalog carts dictionary authenticator'
+	instanceVariableNames: 'catalog carts users merchantProcessor salesBook checkoutedCarts clientSales cartsPerClient'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'TusLibros'!
@@ -663,48 +758,95 @@ addToCartWithId: aCartId withISBN: anISBN withQuantity: aQuantity
 	
 	cartToAdd add: aQuantity of: anISBN.! !
 
-!XXX methodsFor: 'as yet unclassified' stamp: 'g j 11/7/2019 20:52:35'!
+!XXX methodsFor: 'as yet unclassified' stamp: 'g j 11/11/2019 19:11:51'!
+assertCarritoExiste: aCartId 
+	(carts includesKey: aCartId) ifFalse: [self error: self class CarritoInexistente.]! !
+
+!XXX methodsFor: 'as yet unclassified' stamp: 'g j 11/11/2019 17:50:33'!
 assertValidUser: anId with: aPassword
-	(authenticator authWithId: anId andPass: aPassword) ifFalse: [^self error: self class usuarioInvalido].! !
+	(users at: anId ifAbsent: [self error: self class usuarioInvalido]) = aPassword.! !
 
-!XXX methodsFor: 'as yet unclassified' stamp: 'g j 11/7/2019 20:55:41'!
-createCartForId: aCartId withPassword: aString 
-	
-	| newCart |
-	
-	self assertValidUser: aCartId with: aString .
-	newCart := Cart acceptingItemsOf: catalog withId: aCartId.
-	
-	carts add: newCart.
-	
-	^newCart id.! !
+!XXX methodsFor: 'as yet unclassified' stamp: 'g j 11/11/2019 20:56:59'!
+checkoutWithCartId: aCartId on: aDate aCreditCardNumber: aNumber anExpirationDate: monthOfYear andOwnerName: aName
 
-!XXX methodsFor: 'as yet unclassified' stamp: 'g j 11/7/2019 20:13:44'!
+	| aCashier aCreditCard cartToCheckout |
+	self assertCarritoExiste: aCartId.
+	cartToCheckout := carts at: aCartId.
+	aCreditCard := CreditCard expiringOn: monthOfYear.
+	aCashier := Cashier toCheckout: cartToCheckout charging: aCreditCard throught: merchantProcessor on: aDate registeringOn: salesBook.
+	
+	[aCashier checkOut.] on: Cashier cartCanNotBeEmptyErrorMessage
+	do: [:err | self error: self class CarritoVacio.].
+	
+	checkoutedCarts add: cartToCheckout.
+	carts remove: cartToCheckout.! !
+
+!XXX methodsFor: 'as yet unclassified' stamp: 'g j 11/11/2019 21:05:22'!
+createCartForId: anUserId withPassword: aString 
+	
+	| newCart nextCartId cartsForActualUser |
+	
+	self assertValidUser: anUserId with: aString .
+	newCart := Cart acceptingItemsOf: catalog.
+	
+	nextCartId := carts size + 1.
+	
+	cartsForActualUser := cartsPerClient at: anUserId ifAbsent:[cartsPerClient at: anUserId -> OrderedCollection new.
+		cartsForActualUser := cartsPerClient at: anUserId].
+	cartsForActualUser add: nextCartId.
+	cartsPerClient at: anUserId -> cartsPerClient.
+	carts add: nextCartId->newCart.
+	
+	^nextCartId.! !
+
+!XXX methodsFor: 'as yet unclassified' stamp: 'g j 11/11/2019 17:51:44'!
 listCartWithId: aCartId
 	| libros actualCart |
-	actualCart := carts detect: [:aCart | aCart id = aCartId ] ifNone: [].
+	actualCart := carts at: aCartId ifAbsent:[].
 
 	libros := actualCart listBooks.
 	
 	^libros.! !
 
+!XXX methodsFor: 'as yet unclassified' stamp: 'g j 11/11/2019 20:51:55'!
+listPurchasesForUserId: anUserId withPassword: aString 
+	self shouldBeImplemented.! !
 
-!XXX methodsFor: 'initialization' stamp: 'g j 11/7/2019 20:11:04'!
+
+!XXX methodsFor: 'initialization' stamp: 'g j 11/11/2019 18:06:44'!
 initializeWithCatalog: aCatalog 
 	catalog := aCatalog.
-	carts := OrderedCollection new.! !
+	carts := Dictionary new.
+	users := Dictionary new.
+	users add: 2->'keloke'.
+	users add: 3->'jajaja'.! !
 
-!XXX methodsFor: 'initialization' stamp: 'g j 11/7/2019 20:58:58'!
-initializeWithCatalog: aCatalog withAuthenticator: anAuthenticator 
-	carts := OrderedCollection new.
+!XXX methodsFor: 'initialization' stamp: 'g j 11/11/2019 20:59:30'!
+initializeWithCatalog: aCatalog throught: aMerchantProcessor 
 	catalog := aCatalog.
-	authenticator := anAuthenticator.! !
+	merchantProcessor := aMerchantProcessor.
+	carts := Dictionary new.
+	users := Dictionary new.
+	users add: 2->'keloke'.
+	users add: 3->'jajaja'.
+	salesBook := OrderedCollection new.
+	checkoutedCarts := OrderedCollection new.
+	clientSales := Dictionary new.
+	cartsPerClient := Dictionary new.! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'XXX class' category: #TusLibros stamp: 'g j 11/7/2019 20:59:09'!
+!classDefinition: 'XXX class' category: #TusLibros stamp: 'g j 11/11/2019 21:06:48'!
 XXX class
 	instanceVariableNames: ''!
+
+!XXX class methodsFor: 'as yet unclassified' stamp: 'g j 11/11/2019 18:24:15'!
+CarritoInexistente
+	^'El carrito no existe.'! !
+
+!XXX class methodsFor: 'as yet unclassified' stamp: 'g j 11/11/2019 18:28:36'!
+CarritoVacio
+	^'El carrito esta vacio.'! !
 
 !XXX class methodsFor: 'as yet unclassified' stamp: 'g j 11/7/2019 20:44:51'!
 usuarioInvalido
@@ -714,6 +856,6 @@ usuarioInvalido
 withCatalog: aDictionary 
 	^self new initializeWithCatalog: aDictionary.! !
 
-!XXX class methodsFor: 'as yet unclassified' stamp: 'g j 11/7/2019 20:49:11'!
-withCatalog: aCatalog withAuthenticator: anAuthenticator 
-	^self new initializeWithCatalog: aCatalog withAuthenticator: anAuthenticator.! !
+!XXX class methodsFor: 'as yet unclassified' stamp: 'g j 11/11/2019 18:41:05'!
+withCatalog: aDictionary throught: aMerchantProcessor
+	^self new initializeWithCatalog: aDictionary throught: aMerchantProcessor ! !
