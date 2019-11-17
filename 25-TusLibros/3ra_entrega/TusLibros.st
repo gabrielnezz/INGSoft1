@@ -1,4 +1,4 @@
-!classDefinition: #CartTest category: #TusLibros stamp: 'g j 11/14/2019 20:59:20'!
+!classDefinition: #CartTest category: #TusLibros!
 TestCase subclass: #CartTest
 	instanceVariableNames: 'testObjectsFactory'
 	classVariableNames: ''
@@ -98,7 +98,7 @@ setUp
 	testObjectsFactory := StoreTestObjectsFactory new.! !
 
 
-!classDefinition: #CashierTest category: #TusLibros stamp: 'g j 11/14/2019 20:59:20'!
+!classDefinition: #CashierTest category: #TusLibros!
 TestCase subclass: #CashierTest
 	instanceVariableNames: 'testObjectsFactory debitBehavior'
 	classVariableNames: ''
@@ -246,7 +246,7 @@ debit: anAmount from: aCreditCard
 	^debitBehavior value: anAmount value: aCreditCard ! !
 
 
-!classDefinition: #XXXTest category: #TusLibros stamp: 'g j 11/14/2019 20:59:20'!
+!classDefinition: #XXXTest category: #TusLibros!
 TestCase subclass: #XXXTest
 	instanceVariableNames: 'testObjectsFactory debitBehavior'
 	classVariableNames: ''
@@ -483,8 +483,55 @@ test11NoSePuedeCheckoutearUnCarritoCheckouteado
 	
 	! !
 
+!XXXTest methodsFor: 'as yet unclassified' stamp: 'g j 11/17/2019 13:14:21'!
+test12NoSePuedeCheckoutearSobreElCarritoLuegoDe30MinutosSinUsarlo
+
+	| xxx cartId |
+	xxx := XXX withCatalog: testObjectsFactory defaultCatalog throught: self.
+	
+	cartId := xxx createCartForId: 2 withPassword: 'keloke'.
+	
+	xxx addToCartWithId: cartId withISBN: testObjectsFactory itemSellByTheStore withQuantity: 1.
+	
+	self should: [xxx checkoutWithCartId: cartId
+	on: testObjectsFactory todayPlus31 
+	aCreditCardNumber: '123456'
+	anExpirationDate: testObjectsFactory notExpiredDate 
+	andOwnerName: 'Carlitos'.]
+		raise: Error - MessageNotUnderstood
+			withMessageText: XXX InactiveCart.
+	
+	
+	! !
+
+!XXXTest methodsFor: 'as yet unclassified' stamp: 'g j 11/17/2019 13:03:44'!
+test12NoSePuedenRealizarAccionesSobreElCarritoLuegoDe30MinutosSinUsarlo
+
+	| xxx cartId |
+	xxx := XXX withCatalog: testObjectsFactory defaultCatalog throught: self.
+	
+	cartId := xxx createCartForId: 2 withPassword: 'keloke'.
+	
+	xxx addToCartWithId: cartId withISBN: testObjectsFactory itemSellByTheStore withQuantity: 1.
+	xxx checkoutWithCartId: cartId
+	on: testObjectsFactory today 
+	aCreditCardNumber: '123456'
+	anExpirationDate: testObjectsFactory notExpiredDate 
+	andOwnerName: 'Carlitos'.
+	
+	self should: [xxx checkoutWithCartId: cartId
+	on: testObjectsFactory today 
+	aCreditCardNumber: '123456'
+	anExpirationDate: testObjectsFactory notExpiredDate 
+	andOwnerName: 'Carlitos'.]
+		raise: Error - MessageNotUnderstood
+			withMessageText: XXX CartAlreadyCheckoutead.
+	
+	
+	! !
+
 
-!classDefinition: #Cart category: #TusLibros stamp: 'g j 11/14/2019 20:59:20'!
+!classDefinition: #Cart category: #TusLibros!
 Object subclass: #Cart
 	instanceVariableNames: 'catalog items'
 	classVariableNames: ''
@@ -577,7 +624,7 @@ listBooks
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'Cart class' category: #TusLibros stamp: 'g j 11/14/2019 20:59:20'!
+!classDefinition: 'Cart class' category: #TusLibros!
 Cart class
 	instanceVariableNames: ''!
 
@@ -592,7 +639,7 @@ acceptingItemsOf: aCatalog withId: anId
 	^self new initializeAcceptingItemsOf: aCatalog withId: 1 ! !
 
 
-!classDefinition: #Cashier category: #TusLibros stamp: 'g j 11/14/2019 20:59:20'!
+!classDefinition: #Cashier category: #TusLibros!
 Object subclass: #Cashier
 	instanceVariableNames: 'cart salesBook merchantProcessor creditCard total'
 	classVariableNames: ''
@@ -649,7 +696,7 @@ initializeToCheckout: aCart charging: aCreditCard throught: aMerchantProcessor r
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'Cashier class' category: #TusLibros stamp: 'g j 11/14/2019 20:59:20'!
+!classDefinition: 'Cashier class' category: #TusLibros!
 Cashier class
 	instanceVariableNames: ''!
 
@@ -689,7 +736,7 @@ creditCardHasNoCreditErrorMessage
 	^'Credit card has no credit'! !
 
 
-!classDefinition: #Clock category: #TusLibros stamp: 'g j 11/14/2019 20:59:20'!
+!classDefinition: #Clock category: #TusLibros!
 Object subclass: #Clock
 	instanceVariableNames: 'currentTime'
 	classVariableNames: ''
@@ -704,7 +751,7 @@ currentTime
 	^currentTime ! !
 
 
-!classDefinition: #CreditCard category: #TusLibros stamp: 'g j 11/14/2019 20:59:20'!
+!classDefinition: #CreditCard category: #TusLibros!
 Object subclass: #CreditCard
 	instanceVariableNames: 'expiration'
 	classVariableNames: ''
@@ -722,10 +769,9 @@ initializeExpiringOn: aMonth
 	
 	expiration := aMonth ! !
 
-
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'CreditCard class' category: #TusLibros stamp: 'g j 11/14/2019 20:59:20'!
+!classDefinition: 'CreditCard class' category: #TusLibros!
 CreditCard class
 	instanceVariableNames: ''!
 
@@ -735,7 +781,7 @@ expiringOn: aMonth
 	^self new initializeExpiringOn: aMonth! !
 
 
-!classDefinition: #Sale category: #TusLibros stamp: 'g j 11/14/2019 20:59:20'!
+!classDefinition: #Sale category: #TusLibros!
 Object subclass: #Sale
 	instanceVariableNames: 'total saleItems'
 	classVariableNames: ''
@@ -765,10 +811,9 @@ initializeOf: anAmount withItemList: aBookList
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'Sale class' category: #TusLibros stamp: 'g j 11/14/2019 20:59:20'!
+!classDefinition: 'Sale class' category: #TusLibros!
 Sale class
 	instanceVariableNames: ''!
-
 
 !Sale class methodsFor: 'as yet unclassified' stamp: 'g j 11/14/2019 17:38:07'!
 of: anAmount withItemList: aBookList
@@ -777,7 +822,7 @@ of: anAmount withItemList: aBookList
 	! !
 
 
-!classDefinition: #StoreTestObjectsFactory category: #TusLibros stamp: 'g j 11/14/2019 20:59:20'!
+!classDefinition: #StoreTestObjectsFactory category: #TusLibros!
 Object subclass: #StoreTestObjectsFactory
 	instanceVariableNames: 'today'
 	classVariableNames: ''
@@ -856,8 +901,13 @@ today
 	
 	^ today! !
 
+!StoreTestObjectsFactory methodsFor: 'date' stamp: 'g j 11/17/2019 13:09:34'!
+todayPlus31
+	
+	^ today + (Duration minutes: 31)! !
+
 
-!classDefinition: #XXX category: #TusLibros stamp: 'g j 11/14/2019 20:59:20'!
+!classDefinition: #XXX category: #TusLibros!
 Object subclass: #XXX
 	instanceVariableNames: 'catalog carts users merchantProcessor salesBook checkoutedCarts clientSales cartsPerClient currentCartId'
 	classVariableNames: ''
@@ -971,7 +1021,7 @@ initializeWithCatalog: aCatalog throught: aMerchantProcessor
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'XXX class' category: #TusLibros stamp: 'g j 11/14/2019 20:59:20'!
+!classDefinition: 'XXX class' category: #TusLibros!
 XXX class
 	instanceVariableNames: ''!
 
@@ -986,6 +1036,10 @@ CarritoVacio
 !XXX class methodsFor: 'as yet unclassified' stamp: 'g j 11/14/2019 19:57:35'!
 CartAlreadyCheckoutead
 	^'Carrito ya checkouteado'! !
+
+!XXX class methodsFor: 'as yet unclassified' stamp: 'g j 11/17/2019 14:25:21'!
+InactiveCart
+	'El carrito se encuentra invalido'! !
 
 !XXX class methodsFor: 'as yet unclassified' stamp: 'g j 11/7/2019 20:44:51'!
 usuarioInvalido
