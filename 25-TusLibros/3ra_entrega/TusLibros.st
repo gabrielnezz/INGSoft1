@@ -680,8 +680,8 @@ updateLastTransactionTo: aDateTime
 	lastUsed := aDateTime .! !
 
 
-!AuditableItem methodsFor: 'initialization' stamp: 'g j 11/18/2019 15:50:45'!
-withItemId: aCartId withItem: aCart on: currentTime.
+!AuditableItem methodsFor: 'initialization' stamp: 'g j 11/18/2019 16:48:08'!
+initializeWithItemId: aCartId withItem: aCart on: currentTime.
 	itemId := aCartId.
 	item := aCart.
 	lastUsed := currentTime.
@@ -698,9 +698,9 @@ accept: aVisitor
 AuditableItem class
 	instanceVariableNames: ''!
 
-!AuditableItem class methodsFor: 'instance creation' stamp: 'd b 11/17/2019 17:06:10'!
+!AuditableItem class methodsFor: 'instance creation' stamp: 'g j 11/18/2019 16:48:30'!
 withItemId: aCartId withItem: aCart on: currentTime
-	^self new withItemId: aCartId withItem: aCart on: currentTime.! !
+	^self new initializeWithItemId: aCartId withItem: aCart on: currentTime.! !
 
 
 !classDefinition: #ItemCheckouted category: #TusLibros!
@@ -722,9 +722,9 @@ item
 itemId
 	^auditItem itemId ! !
 
-!ItemCheckouted methodsFor: 'accessing' stamp: 'd b 11/17/2019 23:20:38'!
+!ItemCheckouted methodsFor: 'accessing' stamp: 'g j 11/18/2019 16:47:01'!
 lastUsed
-	^auditItem lasUsed ! !
+	^auditItem lastUsed ! !
 
 
 !ItemCheckouted methodsFor: 'visitor' stamp: 'd b 11/17/2019 21:54:34'!
@@ -1047,12 +1047,9 @@ adelantarTiempo: aTime
 currentTime
 	^currentTime! !
 
-!ClockSimulator methodsFor: 'accessing' stamp: 'd b 11/17/2019 23:51:12'!
+!ClockSimulator methodsFor: 'accessing' stamp: 'g j 11/18/2019 16:46:33'!
 valueWithCurrentTime: aBlock
-	^aBlock value:currentTime 
-	"isExpiredOn: aDate
-	^aDate < (currentTime - 30 minutes)
-	"! !
+	^aBlock value:currentTime! !
 
 
 !ClockSimulator methodsFor: 'initialization' stamp: 'd b 11/17/2019 16:33:36'!
@@ -1249,7 +1246,7 @@ Object subclass: #TusLibrosInterface
 	poolDictionaries: ''
 	category: 'TusLibros'!
 
-!TusLibrosInterface methodsFor: 'accessing' stamp: 'g j 11/18/2019 16:20:19'!
+!TusLibrosInterface methodsFor: 'accessing' stamp: 'g j 11/18/2019 16:45:05'!
 addToCartWithId: aCartId withISBN: anISBN withQuantity: aQuantity 
 	
 	| cartToAdd auditItem |
@@ -1260,7 +1257,7 @@ addToCartWithId: aCartId withISBN: anISBN withQuantity: aQuantity
 	
 	cartToAdd add: aQuantity of: anISBN.
 	
-	auditItem nuevoEstado: ((ItemInUse new) from: auditItem). "todo:usar singleton aca"	
+	auditItem nuevoEstado: ((ItemInUse new) from: auditItem).
 	
 	self updateLastTransactionTo: auditItem.! !
 
@@ -1281,7 +1278,7 @@ checkoutWithCartId: aCartId creditCardNumber: aNumber expirationDate: monthOfYea
 	
 	auditItemOfCart nuevoEstado: ItemCheckouted new.! !
 
-!TusLibrosInterface methodsFor: 'accessing' stamp: 'g j 11/18/2019 15:58:53'!
+!TusLibrosInterface methodsFor: 'accessing' stamp: 'g j 11/18/2019 16:48:49'!
 createCartForId: anUserId withPassword: aString 
 	
 	| newCart nextCartId cartsForActualUser |
