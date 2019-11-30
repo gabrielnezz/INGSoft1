@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Tus Libros App</title>
+  <title>Substrings Finder</title>
 
   <!-- Fonts to support Material Design -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
@@ -31,11 +31,15 @@
 
   <script type="text/babel" type="module">
     const {
+      // theme, styles
+      colors,
+      createMuiTheme,
+      makeStyles,
+      withStyles,
+      // components
       AppBar,
       Button,
-      colors,
       Container,
-      createMuiTheme,
       CssBaseline,
       Icon,
       IconButton,
@@ -47,7 +51,6 @@
       ListItem,
       ListItemIcon,
       ListItemText,
-      makeStyles,
       OutlinedInput,
       TextField,
       ThemeProvider,
@@ -71,7 +74,8 @@
         },
       },
     });
-    const useStyles = makeStyles(theme => ({
+    
+    const styles = theme => ({
       root: {
         margin: theme.spacing(6, 0, 3),
       },
@@ -102,13 +106,12 @@
       textFieldDetails: {
         margin: theme.spacing(2),
       }
-    }));
+    })
+    
+    const useStyles = makeStyles(styles);
 
     const getLocalAsJson = (path) => {
-    
-      // var port = 8080
-      var port = 8082
-    
+      const port = 8081
       return fetch(`http://localhost:${port}/${path}`, {
         method: "GET",
         dataType: "JSON",
@@ -118,62 +121,92 @@
       })
     }
 
-    function MyToolBar(props) {
-      const classes = useStyles();
-      const {title, router} = props;
+    class MyToolBarComponent extends React.Component {
+      constructor(props) {
+        super(props)
+      }
     
-      let menuButton = (
-        <IconButton
-          edge="start"
-          className={classes.menuButton}
-          color="inherit"
-          onClick={()=>router.navigate("/", {
+      render() {
+        const {
+          router,
+          title,
+          classes,
+        } = this.props
+    
+        const current_path = router.current()
+        let onclick = () => {}
+        let icon = ""
+    
+        if (current_path === "/") {
+          icon = "home"
+          onclick = () => {}
+        } else if (current_path === "/list") {
+          icon = "home"
+          onclick = () => router.navigate("/", {
             substrings: [],
-            selectedSubstring: "",})}
-          >
-          <Icon>home</Icon>
-        </IconButton>
-      )
+            selectedSubstring: "",
+          })
+        } else if (current_path === "/details") {
+          icon = "keyboard_arrow_left"
+          onclick = () => router.navigate("/list", {
+            selectedSubstring: "",
+          })
+        } else {
+          console.error("Not a valid current path!")
+        }
     
-      if (router.current() === "/details") {
-        menuButton = (
-          <IconButton
-            edge="start"
-            className={classes.menuButton}
-            color="inherit"
-            onClick={()=>router.navigate("/list", {
-            selectedSubstring: "",})}
-          >
-            <Icon>keyboard_arrow_left</Icon>
-          </IconButton>
+        return (
+          <div className={classes.rootToolBar}>
+            <AppBar position="static">
+              <Toolbar>
+                <IconButton
+                  edge="start"
+                  className={classes.menuButton}
+                  color="inherit"
+                  onClick={onclick}
+                >
+                  <Icon>{icon}</Icon>
+                </IconButton>
+                <Typography variant="h6" className={classes.title}>
+                  {title}
+                </Typography>
+              </Toolbar>
+            </AppBar>
+          </div>
         )
       }
     
-      return (
-        <div className={classes.rootToolBar}>
-          <AppBar position="static">
-            <Toolbar>
-              {menuButton}
-              <Typography variant="h6" className={classes.title}>
-                {title}
-              </Typography>
-              {/*<Button color="inherit">Login</Button>*/}
-            </Toolbar>
-          </AppBar>
-        </div>
-      )
     }
-    function StringInputView(props) {
-      const { router } = props
-      const classes = useStyles();
-      const [values, setValues] = React.useState({
-        text: '',
-      });
-      const handleChange = prop => event => {
-        setValues({ ...values, [prop]: event.target.value });
+    
+    // Add style
+    const MyToolBar = withStyles(styles, {
+      withTheme: true
+    })(MyToolBarComponent)
+    class StringInputComponent extends React.Component {
+      constructor(props) {
+        super(props)
+    
+        this.state = {
+          sentence: "",
+        }
+      }
+    
+      handleChange(event) {
+        this.setState({
+          sentence: event.target.value
+        })
       };
-      const handleSend = text => {
-        getLocalAsJson(`substrings?sentence=${text}`)
+    
+      handleSend() {
+        const {
+          router,
+        } = this.props
+    
+        const {
+          sentence,
+        } = this.state
+    
+        getLocalAsJson(`substrings?sentence=${sentence}`)
           .then(function (response) {
             return response.json()
           })
@@ -184,68 +217,106 @@
             console.log('Looks like there was a problem: \n', error);
           });
       }
-      return (
-        <div>
-          <Typography component="h1" gutterBottom>
-            Ingrese un texto donde buscar subcadenas
-              </Typography>
-          <FormControl fullWidth className={classes.textField} variant="outlined">
-            <InputLabel htmlFor="outlined-adornment-amount">String</InputLabel>
-            <OutlinedInput
-              id="outlined-adornment-amount"
-              value={values.text}
-              onChange={handleChange('text')}
-              startAdornment={<InputAdornment position="start">></InputAdornment>}
-              labelWidth={60}
-              multiline
-              rows="7"
-            />
-          </FormControl>
     
-          <Button
-            color="inherit"
-            onClick={() => handleSend(values.text)}>
-            Enviar
-              </Button>
-        </div>
-      )
-    }
-    function SubstringsView(props) {
-      const { router, substrings } = props
-      const classes = useStyles();
+      render() {
+        const {
+          sentence,
+        } = this.state
     
-      return (
-        <div>
-          <Typography component="h1" gutterBottom>
-            Encontramos los siguientes substrings:
+        const {
+          classes,
+        } = this.props
+    
+        return (
+          <div>
+            <Typography component="h1" gutterBottom>
+              Ingrese un texto donde buscar subcadenas
               </Typography>
-          <List component="nav" className={classes.rootList} aria-label="substrings">
-            {
-              substrings.map((substring, ix) => {
-                return (
-                  <ListItem
-                    button
-                    key={ix}
-                    onClick={() => router.navigate('/details', { selectedSubstring: substring })}>
-                    <ListItemText primary={substring} />
-                  </ListItem>
-                )
-              })
-            }
-          </List>
-        </div>
-      )
+            <FormControl fullWidth className={classes.textField} variant="outlined">
+              <InputLabel htmlFor="outlined-adornment-amount">String</InputLabel>
+              <OutlinedInput
+                id="outlined-adornment-amount"
+                value={sentence}
+                onChange={(ev)=>this.handleChange(ev)}
+                startAdornment={<InputAdornment position="start">></InputAdornment>}
+                labelWidth={60}
+                multiline
+                rows="7"
+              />
+            </FormControl>
+    
+            <Button
+              color="inherit"
+              onClick={(ev)=>this.handleSend(ev)}>
+              Enviar
+          </Button>
+          </div>
+        )
+      }
     }
     
-    // Fetch Hook
-    const useFetchDetails = (substring) => {
-      const [details, setDetails] = React.useState([])
-      const [loading, setLoading] = React.useState(false)
-      const [error, setError] = React.useState(null)
+    // Add style
+    const StringInputView = withStyles(styles, {
+      withTheme: true
+    })(StringInputComponent)
+    class SubstringsComponent extends React.Component {
+      constructor(props) {
+        super(props)
+      }
     
-      React.useEffect(() => {
-        setLoading(true)
-        setError(null)
+      render() {
+        const {
+          router,
+          substrings,
+          classes,
+        } = this.props
+    
+        return (
+          <div>
+            <Typography component="h1" gutterBottom>
+              Encontramos los siguientes substrings:
+              </Typography>
+            <List component="nav" className={classes.rootList} aria-label="substrings">
+              {
+                substrings.map((substring, ix) => {
+                  return (
+                    <ListItem
+                      button
+                      key={ix}
+                      onClick={() => router.navigate('/details', { selectedSubstring: substring })}>
+                      <ListItemText primary={substring} />
+                    </ListItem>
+                  )
+                })
+              }
+            </List>
+          </div>
+        )
+      }
+    }
+    
+    // Add style
+    const SubstringsView = withStyles(styles, {
+      withTheme: true
+    })(SubstringsComponent)
+    class SubstringDetailsComponent extends React.Component {
+      constructor(props) {
+        super(props)
+    
+        this.state = {
+          details: {},
+          loading: false,
+          error: null,
+        }
+      }
+    
+      componentDidMount() {
+        const substring = this.props.selectedSubstring
+    
+        this.setState({
+          loading: true,
+          error: null,
+        })
     
         let details = {}
     
@@ -255,18 +326,6 @@
           })
           .then(function (json) {
             details["firstLetter"] = json
-    
-            setLoading(false)
-            if (details) {
-              setDetails(details)
-            } else {
-              setDetails([])
-            }
-          })
-          .then(function () {
-            setLoading(true)
-            setError(null)
-    
             return getLocalAsJson(`touppercase?word=${substring}`)
           })
           .then(function (response) {
@@ -274,95 +333,93 @@
           })
           .then(function (json) {
             details["uppercase"] = json
-    
-            setLoading(false)
-            if (details) {
-              setDetails(details)
-            } else {
-              setDetails([])
-            }
-          })
-          .then(function () {
-            setLoading(true)
-            setError(null)
-    
             return getLocalAsJson(`vowels?word=${substring}`)
           })
-          .then(function (response) {
+          .then(function(response) {
             return response.json()
           })
           .then(function (json) {
             details["vowels"] = json
-    
-            setLoading(false)
-            if (details) {
-              setDetails(details)
-            } else {
-              setDetails([])
-            }
+            return details
+          })
+          .then((details) => {
+            this.setState({
+              loading: false,
+              details: details
+            })
           })
           .catch(err => {
-            setError(err)
-            setLoading(false)
+            this.setState({
+              loading: false,
+              error: err,
+            })
           })
-      }, [substring])
+      }
     
-      return { details, loading, error }
+      render() {
+        const {
+          // router,
+          selectedSubstring,
+          classes,
+        } = this.props
+    
+        const {
+          details,
+          loading,
+          error,
+        } = this.state
+    
+        if (loading) return <div>Loading...</div>
+        if (error) return <div>{error}</div>
+    
+        return (
+          <div>
+            <Typography variant="h4" component="h4" gutterBottom>
+              Detalles de <b>{selectedSubstring}</b>
+            </Typography>
+    
+            <TextField
+              id="outlined-read-only-input"
+              label="Primera letra"
+              defaultValue={details["firstLetter"]}
+              className={classes.textFieldDetails}
+              margin="normal"
+              InputProps={{
+                readOnly: true,
+              }}
+              variant="outlined"
+            />
+            <TextField
+              id="outlined-read-only-input"
+              label="En mayúsculas"
+              defaultValue={details["uppercase"]}
+              className={classes.textFieldDetails}
+              margin="normal"
+              InputProps={{
+                readOnly: true,
+              }}
+              variant="outlined"
+            />
+            <TextField
+              id="outlined-read-only-input"
+              label="Vocales"
+              defaultValue={details["vowels"]}
+              className={classes.textFieldDetails}
+              margin="normal"
+              InputProps={{
+                readOnly: true,
+              }}
+              variant="outlined"
+            />
+          </div>
+        )
+      }
     }
     
-    // Component
-    function SubstringDetailsView(props) {
-      const { router, selectedSubstring } = props
-      const classes = useStyles();
-    
-      const { details, loading, error } = useFetchDetails(selectedSubstring)
-    
-      if (loading) return <div>Loading...</div>
-      if (error) return <div>{error}</div>
-    
-      return (
-        <div>
-          <Typography variant="h4" component="h4" gutterBottom>
-            Detalles de <b>{selectedSubstring}</b>
-          </Typography>
-    
-          <TextField
-            id="outlined-read-only-input"
-            label="Primera letra"
-            defaultValue={details["firstLetter"]}
-            className={classes.textFieldDetails}
-            margin="normal"
-            InputProps={{
-              readOnly: true,
-            }}
-            variant="outlined"
-          />
-          <TextField
-            id="outlined-read-only-input"
-            label="En mayúsculas"
-            defaultValue={details["uppercase"]}
-            className={classes.textFieldDetails}
-            margin="normal"
-            InputProps={{
-              readOnly: true,
-            }}
-            variant="outlined"
-          />
-          <TextField
-            id="outlined-read-only-input"
-            label="Vocales"
-            defaultValue={details["vowels"]}
-            className={classes.textFieldDetails}
-            margin="normal"
-            InputProps={{
-              readOnly: true,
-            }}
-            variant="outlined"
-          />
-        </div>
-      )
-    }
-    
+    // Add style
+    const SubstringDetailsView = withStyles(styles, {
+      withTheme: true
+    })(SubstringDetailsComponent)
     class App extends React.Component {
       constructor(props) {
         super(props);

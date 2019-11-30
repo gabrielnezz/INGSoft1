@@ -1,45 +1,61 @@
-function MyToolBar(props) {
-  const classes = useStyles();
-  const {title, router} = props;
+class MyToolBarComponent extends React.Component {
+  constructor(props) {
+    super(props)
+  }
 
-  let menuButton = (
-    <IconButton
-      edge="start"
-      className={classes.menuButton}
-      color="inherit"
-      onClick={()=>router.navigate("/", {
+  render() {
+    const {
+      router,
+      title,
+      classes,
+    } = this.props
+
+    const current_path = router.current()
+    let onclick = () => {}
+    let icon = ""
+
+    if (current_path === "/") {
+      icon = "home"
+      onclick = () => {}
+    } else if (current_path === "/list") {
+      icon = "home"
+      onclick = () => router.navigate("/", {
         substrings: [],
-        selectedSubstring: "",})}
-      >
-      <Icon>home</Icon>
-    </IconButton>
-  )
+        selectedSubstring: "",
+      })
+    } else if (current_path === "/details") {
+      icon = "keyboard_arrow_left"
+      onclick = () => router.navigate("/list", {
+        selectedSubstring: "",
+      })
+    } else {
+      console.error("Not a valid current path!")
+    }
 
-  if (router.current() === "/details") {
-    menuButton = (
-      <IconButton
-        edge="start"
-        className={classes.menuButton}
-        color="inherit"
-        onClick={()=>router.navigate("/list", {
-        selectedSubstring: "",})}
-      >
-        <Icon>keyboard_arrow_left</Icon>
-      </IconButton>
+    return (
+      <div className={classes.rootToolBar}>
+        <AppBar position="static">
+          <Toolbar>
+            <IconButton
+              edge="start"
+              className={classes.menuButton}
+              color="inherit"
+              onClick={onclick}
+            >
+              <Icon>{icon}</Icon>
+            </IconButton>
+            <Typography variant="h6" className={classes.title}>
+              {title}
+            </Typography>
+          </Toolbar>
+        </AppBar>
+      </div>
     )
   }
 
-  return (
-    <div className={classes.rootToolBar}>
-      <AppBar position="static">
-        <Toolbar>
-          {menuButton}
-          <Typography variant="h6" className={classes.title}>
-            {title}
-          </Typography>
-          {/*<Button color="inherit">Login</Button>*/}
-        </Toolbar>
-      </AppBar>
-    </div>
-  )
 }
+
+// Add style
+const MyToolBar = withStyles(styles, {
+  withTheme: true
+})(MyToolBarComponent)

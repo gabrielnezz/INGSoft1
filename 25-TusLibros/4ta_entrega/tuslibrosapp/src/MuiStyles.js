@@ -15,7 +15,8 @@ const theme = createMuiTheme({
     },
   },
 });
-const useStyles = makeStyles(theme => ({
+
+const styles = theme => ({
   root: {
     margin: theme.spacing(6, 0, 3),
   },
@@ -46,4 +47,6 @@ const useStyles = makeStyles(theme => ({
   textFieldDetails: {
     margin: theme.spacing(2),
   }
-}));
+})
+
+const useStyles = makeStyles(styles);
