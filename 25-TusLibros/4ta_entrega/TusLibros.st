@@ -1,4 +1,4 @@
-!classDefinition: #CartTest category: #TusLibros stamp: 'd b 11/30/2019 18:12:01'!
+!classDefinition: #CartTest category: #TusLibros stamp: 'd b 12/1/2019 11:54:55'!
 TestCase subclass: #CartTest
 	instanceVariableNames: 'testObjectsFactory'
 	classVariableNames: ''
@@ -98,7 +98,7 @@ setUp
 	testObjectsFactory := StoreTestObjectsFactory new.! !
 
 
-!classDefinition: #CashierTest category: #TusLibros stamp: 'd b 11/30/2019 18:12:01'!
+!classDefinition: #CashierTest category: #TusLibros stamp: 'd b 12/1/2019 11:54:55'!
 TestCase subclass: #CashierTest
 	instanceVariableNames: 'testObjectsFactory debitBehavior'
 	classVariableNames: ''
@@ -251,7 +251,7 @@ debit: anAmount from: aCreditCard
 	^debitBehavior value: anAmount value: aCreditCard ! !
 
 
-!classDefinition: #TusLibrosInterfaceInternaTest category: #TusLibros stamp: 'd b 11/30/2019 18:12:01'!
+!classDefinition: #TusLibrosInterfaceInternaTest category: #TusLibros stamp: 'd b 12/1/2019 11:54:55'!
 TestCase subclass: #TusLibrosInterfaceInternaTest
 	instanceVariableNames: 'testObjectsFactory debitBehavior salesBook interface clock'
 	classVariableNames: ''
@@ -734,7 +734,7 @@ test21NoSePuedeEliminarUnCarritoQueNoExiste
 	! !
 
 
-!classDefinition: #AuditableItem category: #TusLibros stamp: 'd b 11/30/2019 18:12:01'!
+!classDefinition: #AuditableItem category: #TusLibros stamp: 'd b 12/1/2019 11:54:55'!
 Object subclass: #AuditableItem
 	instanceVariableNames: 'itemId item lastUsed estado'
 	classVariableNames: ''
@@ -792,7 +792,7 @@ accept: aVisitor
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'AuditableItem class' category: #TusLibros stamp: 'd b 11/30/2019 18:12:01'!
+!classDefinition: 'AuditableItem class' category: #TusLibros stamp: 'd b 12/1/2019 11:54:55'!
 AuditableItem class
 	instanceVariableNames: ''!
 
@@ -801,7 +801,7 @@ withItemId: aCartId withItem: aCart on: currentTime
 	^self new initializeWithItemId: aCartId withItem: aCart on: currentTime.! !
 
 
-!classDefinition: #ItemCheckouted category: #TusLibros stamp: 'd b 11/30/2019 18:12:01'!
+!classDefinition: #ItemCheckouted category: #TusLibros stamp: 'd b 12/1/2019 11:54:55'!
 AuditableItem subclass: #ItemCheckouted
 	instanceVariableNames: 'auditItem'
 	classVariableNames: ''
@@ -836,7 +836,7 @@ from: anAuditItem
 	auditItem := anAuditItem ! !
 
 
-!classDefinition: #ItemExpired category: #TusLibros stamp: 'd b 11/30/2019 18:12:01'!
+!classDefinition: #ItemExpired category: #TusLibros stamp: 'd b 12/1/2019 11:54:55'!
 AuditableItem subclass: #ItemExpired
 	instanceVariableNames: 'auditItem'
 	classVariableNames: ''
@@ -870,7 +870,7 @@ lastUsed
 	^auditItem lastUsed ! !
 
 
-!classDefinition: #ItemInUse category: #TusLibros stamp: 'd b 11/30/2019 18:12:01'!
+!classDefinition: #ItemInUse category: #TusLibros stamp: 'd b 12/1/2019 11:54:55'!
 AuditableItem subclass: #ItemInUse
 	instanceVariableNames: 'auditItem'
 	classVariableNames: ''
@@ -904,7 +904,7 @@ lastUsed
 	^auditItem lastUsed ! !
 
 
-!classDefinition: #ItemJustCreated category: #TusLibros stamp: 'd b 11/30/2019 18:12:01'!
+!classDefinition: #ItemJustCreated category: #TusLibros stamp: 'd b 12/1/2019 11:54:55'!
 AuditableItem subclass: #ItemJustCreated
 	instanceVariableNames: 'auditItem'
 	classVariableNames: ''
@@ -938,7 +938,7 @@ lastUsed
 	^auditItem lasUsed ! !
 
 
-!classDefinition: #Cart category: #TusLibros stamp: 'd b 11/30/2019 18:12:01'!
+!classDefinition: #Cart category: #TusLibros stamp: 'd b 12/1/2019 11:54:55'!
 Object subclass: #Cart
 	instanceVariableNames: 'catalog items'
 	classVariableNames: ''
@@ -1023,7 +1023,7 @@ add: aQuantity of: anItem
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'Cart class' category: #TusLibros stamp: 'd b 11/30/2019 18:12:01'!
+!classDefinition: 'Cart class' category: #TusLibros stamp: 'd b 12/1/2019 11:54:55'!
 Cart class
 	instanceVariableNames: ''!
 
@@ -1033,7 +1033,7 @@ acceptingItemsOf: aCatalog
 	^self new initializeAcceptingItemsOf: aCatalog! !
 
 
-!classDefinition: #Cashier category: #TusLibros stamp: 'd b 11/30/2019 18:12:01'!
+!classDefinition: #Cashier category: #TusLibros stamp: 'd b 12/1/2019 11:54:55'!
 Object subclass: #Cashier
 	instanceVariableNames: 'cart salesBook merchantProcessor creditCard total userId'
 	classVariableNames: ''
@@ -1090,7 +1090,7 @@ initializeToCheckout: aCart charging: aCreditCard throught: aMerchantProcessor o
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'Cashier class' category: #TusLibros stamp: 'd b 11/30/2019 18:12:01'!
+!classDefinition: 'Cashier class' category: #TusLibros stamp: 'd b 12/1/2019 11:54:55'!
 Cashier class
 	instanceVariableNames: ''!
 
@@ -1130,7 +1130,7 @@ creditCardHasNoCreditErrorMessage
 	^'Credit card has no credit'! !
 
 
-!classDefinition: #ClockSimulator category: #TusLibros stamp: 'd b 11/30/2019 18:12:01'!
+!classDefinition: #ClockSimulator category: #TusLibros stamp: 'd b 12/1/2019 11:54:55'!
 Object subclass: #ClockSimulator
 	instanceVariableNames: 'currentTime'
 	classVariableNames: ''
@@ -1156,7 +1156,7 @@ withDate: aDateTime
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'ClockSimulator class' category: #TusLibros stamp: 'd b 11/30/2019 18:12:01'!
+!classDefinition: 'ClockSimulator class' category: #TusLibros stamp: 'd b 12/1/2019 11:54:55'!
 ClockSimulator class
 	instanceVariableNames: 'date'!
 
@@ -1165,7 +1165,7 @@ withDate: aDateTime
 	^self new withDate: aDateTime.! !
 
 
-!classDefinition: #CreditCard category: #TusLibros stamp: 'd b 11/30/2019 18:12:01'!
+!classDefinition: #CreditCard category: #TusLibros stamp: 'd b 12/1/2019 11:54:55'!
 Object subclass: #CreditCard
 	instanceVariableNames: 'expiration'
 	classVariableNames: ''
@@ -1185,7 +1185,7 @@ initializeExpiringOn: aMonth
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'CreditCard class' category: #TusLibros stamp: 'd b 11/30/2019 18:12:01'!
+!classDefinition: 'CreditCard class' category: #TusLibros stamp: 'd b 12/1/2019 11:54:55'!
 CreditCard class
 	instanceVariableNames: ''!
 
@@ -1195,7 +1195,7 @@ expiringOn: aMonth
 	^self new initializeExpiringOn: aMonth! !
 
 
-!classDefinition: #MerchantProcessor category: #TusLibros stamp: 'd b 11/30/2019 18:12:01'!
+!classDefinition: #MerchantProcessor category: #TusLibros stamp: 'd b 12/1/2019 11:54:55'!
 Object subclass: #MerchantProcessor
 	instanceVariableNames: 'debitBehavior'
 	classVariableNames: ''
@@ -1210,7 +1210,7 @@ debit: anAmount from: aCreditCard
 	! !
 
 
-!classDefinition: #Sale category: #TusLibros stamp: 'd b 11/30/2019 18:12:01'!
+!classDefinition: #Sale category: #TusLibros stamp: 'd b 12/1/2019 11:54:55'!
 Object subclass: #Sale
 	instanceVariableNames: 'total saleItems userId'
 	classVariableNames: ''
@@ -1253,7 +1253,7 @@ initializeOf: anAmount withItemList: aBookList ofUser:aUserId.
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'Sale class' category: #TusLibros stamp: 'd b 11/30/2019 18:12:01'!
+!classDefinition: 'Sale class' category: #TusLibros stamp: 'd b 12/1/2019 11:54:55'!
 Sale class
 	instanceVariableNames: ''!
 
@@ -1264,7 +1264,7 @@ of: anAmount withItemList: aBookList ofUser: aUserId.
 	! !
 
 
-!classDefinition: #StoreTestObjectsFactory category: #TusLibros stamp: 'd b 11/30/2019 18:12:01'!
+!classDefinition: #StoreTestObjectsFactory category: #TusLibros stamp: 'd b 12/1/2019 11:54:55'!
 Object subclass: #StoreTestObjectsFactory
 	instanceVariableNames: 'today'
 	classVariableNames: ''
@@ -1375,14 +1375,14 @@ todayPlus31
 	^ today + (Duration minutes: 31)! !
 
 
-!classDefinition: #TusLibrosInterface category: #TusLibros stamp: 'd b 11/30/2019 18:12:01'!
+!classDefinition: #TusLibrosInterface category: #TusLibros stamp: 'd b 12/1/2019 11:54:55'!
 Object subclass: #TusLibrosInterface
 	instanceVariableNames: 'catalog carts users merchantProcessor salesBook cartsPerClient currentCartId clock usersName'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'TusLibros'!
 
-!TusLibrosInterface methodsFor: 'accessing' stamp: 'd b 11/30/2019 11:38:49'!
+!TusLibrosInterface methodsFor: 'accessing' stamp: 'd b 12/1/2019 11:50:10'!
 addToCartWithId: aCartId withISBN: anISBN withQuantity: aQuantity 
 	
 	| cartToAdd auditItem |
@@ -1392,9 +1392,11 @@ addToCartWithId: aCartId withISBN: anISBN withQuantity: aQuantity
 	cartToAdd add: aQuantity of: anISBN.
 	auditItem nuevoEstado: ((ItemInUse new) from: auditItem).
 	
-	self updateLastTransactionTo: auditItem.! !
+	self updateLastTransactionTo: auditItem.
+	
+	^'OK'.! !
 
-!TusLibrosInterface methodsFor: 'accessing' stamp: 'd b 11/23/2019 15:25:58'!
+!TusLibrosInterface methodsFor: 'accessing' stamp: 'd b 12/1/2019 11:53:15'!
 checkoutWithCartId: aCartId creditCardNumber: aNumber expirationDate: monthOfYear andOwnerName: aName on: aDate 
 
 	| aCashier aCreditCard cartToCheckout auditItemOfCart |
@@ -1408,7 +1410,9 @@ checkoutWithCartId: aCartId creditCardNumber: aNumber expirationDate: monthOfYea
 	[aCashier checkOut.] on: Cashier cartCanNotBeEmptyErrorMessage
 	do: [:err | self error: self class carritoVacio.].
 	
-	auditItemOfCart nuevoEstado: ItemCheckouted new.! !
+	auditItemOfCart nuevoEstado: ItemCheckouted new.
+	
+	^'OK'.! !
 
 !TusLibrosInterface methodsFor: 'accessing' stamp: 'g j 11/18/2019 16:48:49'!
 createCartForId: anUserId withPassword: aString 
@@ -1561,7 +1565,7 @@ withCatalog: aCatalog throught: aMerchantProcessor registeringOn: aSalesBook wit
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'TusLibrosInterface class' category: #TusLibros stamp: 'd b 11/30/2019 18:12:01'!
+!classDefinition: 'TusLibrosInterface class' category: #TusLibros stamp: 'd b 12/1/2019 11:54:55'!
 TusLibrosInterface class
 	instanceVariableNames: ''!
 
@@ -1600,25 +1604,24 @@ CarritoEliminado
 	'Error!! esta intentando usar un carrito eliminado'! !
 
 
-!classDefinition: #TusLibrosInterfaceExterna category: #TusLibros stamp: 'd b 11/30/2019 18:12:01'!
+!classDefinition: #TusLibrosInterfaceExterna category: #TusLibros stamp: 'd b 12/1/2019 11:54:55'!
 Object subclass: #TusLibrosInterfaceExterna
 	instanceVariableNames: 'port webServer merchantProcessor tusLibrosInterfaceInterna'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'TusLibros'!
 
-!TusLibrosInterfaceExterna methodsFor: 'initialization' stamp: 'd b 11/23/2019 13:05:01'!
+!TusLibrosInterfaceExterna methodsFor: 'initialization' stamp: 'd b 12/1/2019 11:40:31'!
 initializeWithCatalog: aCatalog throught: aMerchantProcessor registeringOn: salesBook withClock: aClock andPort: aPort
 	tusLibrosInterfaceInterna := TusLibrosInterface withCatalog: aCatalog throught: aMerchantProcessor registeringOn: salesBook withClock: aClock.
 	port := aPort .
 	webServer := WebServer new listenOn: aPort.
 	merchantProcessor := aMerchantProcessor .
-	
 	self addServices.
 	^self.! !
 
 
-!TusLibrosInterfaceExterna methodsFor: 'actions' stamp: 'd b 11/23/2019 15:31:02'!
+!TusLibrosInterfaceExterna methodsFor: 'actions' stamp: 'd b 12/1/2019 11:46:34'!
 addServices
 	self createCart.
 	self addToCart .
@@ -1653,86 +1656,83 @@ stopListening
 	! !
 
 
-!TusLibrosInterfaceExterna methodsFor: 'services' stamp: 'd b 11/30/2019 11:40:39'!
+!TusLibrosInterfaceExterna methodsFor: 'services' stamp: 'd b 12/1/2019 11:48:07'!
 addToCart
-	webServer addService: '/addToCart' action: [ :request | 
-		[
+	^self onRouteService: '/addToCart' do: [:request |
 			|res quantity cartId isbn|
 			cartId := (request fields at: 'cartId') asInteger .
 			isbn :=  (request fields at: 'isbn') .
 			quantity :=  (request fields at: 'quantity') asInteger .
 			res:=(tusLibrosInterfaceInterna addToCartWithId: cartId withISBN: isbn withQuantity:quantity ).
-			request send200Response: (WebUtils jsonEncode: 'OK') contentType: 'application/json, charset=utf-8'.		
-			] on: Error
-			do: [:error | request send404Response:(error messageText )].
 		].! !
 
-!TusLibrosInterfaceExterna methodsFor: 'services' stamp: 'd b 11/30/2019 12:59:46'!
+!TusLibrosInterfaceExterna methodsFor: 'services' stamp: 'd b 12/1/2019 11:48:03'!
 checkoutCart
-	webServer addService: '/checkoutCart' action: [ :request | 
-		[
+	^self onRouteService: '/checkoutCart' do: [:request |
 			|res cartId ccn cced cco cceed today|
 			cartId := (request fields at:'cartId') asInteger .
 			ccn :=  (request fields at:'ccn') asInteger .
-			"cced := (request fields at:'cced'). " "TODO: esto hay que cambiarlo para que reciba el strng q dice el enunciado y lo parsee"
-			cced := StoreTestObjectsFactory new notExpiredDate .
+			"cced := StoreTestObjectsFactory new notExpiredDate ."
+			cced := self stringOfDateToMonthOfYearType: (request fields at:'cced').
 			"cco := (request fields at:'cco')."
 			today := StoreTestObjectsFactory new today.
 			res := (tusLibrosInterfaceInterna checkoutWithCartId: cartId creditCardNumber: ccn expirationDate: cced andOwnerName: 'Gonzalo' on: today).
-			request send200Response: (WebUtils jsonEncode: 'Carrito checkouteado')  contentType: 'application/json, charset=utf-8'			
-	
-			] on: Error
-			do: [:error | request send404Response:(error messageText )]
-			
 		].! !
 
-!TusLibrosInterfaceExterna methodsFor: 'services' stamp: 'd b 11/30/2019 18:09:15'!
+!TusLibrosInterfaceExterna methodsFor: 'services' stamp: 'd b 12/1/2019 11:39:26'!
 createCart
 	
-	webServer addService: '/createCart' action: [ :request | 
-		[
+	^self onRouteService: '/createCart' do: [:aReq | 
 			|res|
-			res:=(tusLibrosInterfaceInterna createCartForId: ((request fields at: 'userId') asInteger) withPassword: (request fields at: 'password')). 
-			request send200Response: (WebUtils jsonEncode: res)  contentType: 'application/json; charset=utf-8'  do: [:resp | 
-					resp headerAt: 'Access-Control-Allow-Origin' put: '*'].			
-	
-			] on: Error
-			do: [:error | request send404Response:(error messageText )]
+			res:=(tusLibrosInterfaceInterna createCartForId: ((aReq fields at: 'userId') asInteger) withPassword: (aReq fields at: 'password')).			
 			
 		].! !
 
-!TusLibrosInterfaceExterna methodsFor: 'services' stamp: 'd b 11/23/2019 14:52:24'!
+!TusLibrosInterfaceExterna methodsFor: 'services' stamp: 'd b 12/1/2019 11:48:11'!
 listCart
-	webServer addService: '/listCart' action: [ :request | 
-		[
+	^self onRouteService: '/listCart' do:  
+		[:request |
 			|res cartId|
 			cartId := (request fields at:'cartId') asInteger.
 			res:=tusLibrosInterfaceInterna listCartWithId: cartId.
-			request send200Response: (WebUtils jsonEncode: res)  contentType: 'application/json, charset=utf-8'.
-	
-			] on: Error
-			do: [:error | request send404Response:(error messageText )]
-			
 		].! !
 
-!TusLibrosInterfaceExterna methodsFor: 'services' stamp: 'd b 11/30/2019 12:29:00'!
+!TusLibrosInterfaceExterna methodsFor: 'services' stamp: 'd b 12/1/2019 11:48:14'!
 listPurchases
-	
-	webServer addService: '/listPurchases' action: [ :request | 
-		[
+	^self onRouteService: '/listPurchases' do: [:request |
 			|res clientId password salesBook  totalPurchases|
 			clientId := (request fields at: 'clientId')  asInteger .
 			password := request fields at:'password'.
 			
-			res := (tusLibrosInterfaceInterna listPurchasesForUserId: clientId withPassword: password).
-			request send200Response: (WebUtils jsonEncode: res)  contentType: 'application/json, charset=utf-8' .
-			] on: Error
-			do: [:error | request send404Response:(error messageText )]
-			
+			res := (tusLibrosInterfaceInterna listPurchasesForUserId: clientId withPassword: password).			
 		].! !
+
+!TusLibrosInterfaceExterna methodsFor: 'services' stamp: 'd b 12/1/2019 11:24:40'!
+onRouteService: aRouteOfService do: aClosure
+	webServer addService: aRouteOfService action: [:aRequest |
+			[
+			| res |
+			res := aClosure value: aRequest.
+			
+			aRequest send200Response: (WebUtils jsonEncode: res) 
+						contentType: 'application/json; charset=utf-8' do: [:resp |
+									resp headerAt: 'Access-Control-Allow-Origin' put: '*'.]
+			]
+			on: Error
+			do: [:err | aRequest send404Response: (err messageText)]
+	].
+										! !
+
+
+!TusLibrosInterfaceExterna methodsFor: 'utils' stamp: 'd b 12/1/2019 11:31:58'!
+stringOfDateToMonthOfYearType: textOfDate
+	| mes anio|
+	mes := (textOfDate copyFrom: 1 to: 2) asNumber.
+	anio := (textOfDate copyFrom: 4 to: 7)  asNumber.
+	^Month month: mes year: anio.! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'TusLibrosInterfaceExterna class' category: #TusLibros stamp: 'd b 11/30/2019 18:12:01'!
+!classDefinition: 'TusLibrosInterfaceExterna class' category: #TusLibros stamp: 'd b 12/1/2019 11:54:55'!
 TusLibrosInterfaceExterna class
 	instanceVariableNames: 'webServer port'!
