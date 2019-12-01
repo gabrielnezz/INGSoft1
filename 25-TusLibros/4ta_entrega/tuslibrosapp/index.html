@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Substrings Finder</title>
+  <title>Tus Libros App</title>
 
   <!-- Fonts to support Material Design -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
@@ -111,7 +111,7 @@
     const useStyles = makeStyles(styles);
 
     const getLocalAsJson = (path) => {
-      const port = 8081
+      const port = 8014
       return fetch(`http://localhost:${port}/${path}`, {
         method: "GET",
         dataType: "JSON",
@@ -119,6 +119,62 @@
           "Access-Control-Request-Headers": "*"
         }
       })
+    }
+
+    class CreateCartComponent extends React.Component {
+      constructor(props) {
+        super(props)
+        this.state = {
+          clientId: '',
+          password: ''
+        }
+      }
+
+      handleSend() {
+        const {
+          router,
+        } = this.props
+    
+        const {
+          clientId,
+          password
+        } = this.state
+        console.log(this.state.clientId)
+        console.log(this.state.password)
+        getLocalAsJson(`createCart/?clientId=${clientId}&password${password}`)
+          .then(function (response) {
+            return response.json()
+          })
+          .then(function (json) {
+            
+          })
+          .catch(function (error) {
+            console.log('Looks like there was a problem: \n', error);
+          });
+      }
+
+      render(){
+        const {
+          router
+        } = this.props
+
+        const {
+          clientId,
+          password
+        } = this.state 
+        return(
+          <div>
+            
+              <TextField id="clientId" label="Client ID" variant="outlined" />
+              <TextField id="password" type="password" label="Password" variant="outlined" />
+              <Button onClick={ev=>this.handleSend(ev)} variant="contained" color="primary">
+                Crear!
+              </Button>
+            
+          </div>
+        )
+      }
+
     }
 
     class MyToolBarComponent extends React.Component {
@@ -177,6 +233,7 @@
       }
     
     }
+    
     
     // Add style
     const MyToolBar = withStyles(styles, {
@@ -440,9 +497,9 @@
             this.setState({ ...state, path: path })
           }
         }
-    
+
         if (this.state.path === "/") {
-          content = (<StringInputView
+          content = (<CreateCartComponent
             router={router}
           />)
         } else if (this.state.path === "/list") {
@@ -471,7 +528,6 @@
         );
       }
     }
-
     ///////////////////////////////////////////////////////////////////////////
     // Initial render
     //
