@@ -154,10 +154,11 @@
             return response.json()
           })
           .then(function (json) {
-            
+            router.navigate('/catalogo')
           })
           .catch(function (error) {
             console.log('Looks like there was a problem: \n', error);
+            router.navigate('error')
           });
       }
       handleClient(event) {
@@ -513,7 +514,7 @@
             this.setState({ ...state, path: path })
           }
         }
-
+        let content = ""
         if (this.state.path === "/") {
           content = (<CreateCartComponent
             router={router}
@@ -528,6 +529,8 @@
             router={router}
             selectedSubstring={this.state.selectedSubstring}
           />)
+        }else if (this.state.path === 'error'){
+          content = (<h2>Error login</h2>)
         }
         return (
           <div>
