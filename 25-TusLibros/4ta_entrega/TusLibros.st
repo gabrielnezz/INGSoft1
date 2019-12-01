@@ -1,4 +1,4 @@
-!classDefinition: #CartTest category: #TusLibros stamp: 'd b 12/1/2019 11:54:55'!
+!classDefinition: #CartTest category: #TusLibros stamp: 'd b 12/1/2019 18:30:30'!
 TestCase subclass: #CartTest
 	instanceVariableNames: 'testObjectsFactory'
 	classVariableNames: ''
@@ -98,7 +98,7 @@ setUp
 	testObjectsFactory := StoreTestObjectsFactory new.! !
 
 
-!classDefinition: #CashierTest category: #TusLibros stamp: 'd b 12/1/2019 11:54:55'!
+!classDefinition: #CashierTest category: #TusLibros stamp: 'd b 12/1/2019 18:30:30'!
 TestCase subclass: #CashierTest
 	instanceVariableNames: 'testObjectsFactory debitBehavior'
 	classVariableNames: ''
@@ -251,7 +251,7 @@ debit: anAmount from: aCreditCard
 	^debitBehavior value: anAmount value: aCreditCard ! !
 
 
-!classDefinition: #TusLibrosInterfaceInternaTest category: #TusLibros stamp: 'd b 12/1/2019 11:54:55'!
+!classDefinition: #TusLibrosInterfaceInternaTest category: #TusLibros stamp: 'd b 12/1/2019 18:30:30'!
 TestCase subclass: #TusLibrosInterfaceInternaTest
 	instanceVariableNames: 'testObjectsFactory debitBehavior salesBook interface clock'
 	classVariableNames: ''
@@ -733,8 +733,87 @@ test21NoSePuedeEliminarUnCarritoQueNoExiste
 			withMessageText: TusLibrosInterface carritoInexistente .
 	! !
 
+!TusLibrosInterfaceInternaTest methodsFor: 'tests' stamp: 'd b 12/1/2019 18:26:06'!
+test22NoSePuedeRemoverMasLibrosDeLosQueTieneElCarrito
+
+	| cartId aIsbn aQuantity|
+	aIsbn := testObjectsFactory itemSellByTheStore.
+	aQuantity := 2.
+	cartId :=  interface createCartForId: self validUser withPassword: self validPassword.
+	interface addToCartWithId: cartId withISBN: testObjectsFactory itemSellByTheStore withQuantity: 1.
+	self should: [interface deletefromCartId: cartId book: aIsbn quantity: aQuantity]
+		raise: Error - MessageNotUnderstood
+			withMessageText: TusLibrosInterface LibroQuantityError .
+	! !
+
+!TusLibrosInterfaceInternaTest methodsFor: 'tests' stamp: 'd b 12/1/2019 18:28:06'!
+test22NoSePuedeRemoverUnLibroQueNoEsDelCatalogo
+
+	| cartId aIsbn aQuantity|
+	aIsbn := testObjectsFactory itemSellByTheStore.
+	aQuantity := 1.
+	cartId :=  interface createCartForId: self validUser withPassword: self validPassword.
+	interface addToCartWithId: cartId withISBN: aIsbn withQuantity: 1.
+	self should: [interface deletefromCartId: cartId book: 'un libro q no es del catalogo' quantity: aQuantity]
+		raise: Error - MessageNotUnderstood
+			withMessageText: TusLibrosInterface LibroNoExisteEnCarrito .
+	! !
+
+!TusLibrosInterfaceInternaTest methodsFor: 'tests' stamp: 'd b 12/1/2019 18:17:10'!
+test22NoSePuedeRemoverUnLibroQueNoExisteEnElCarrito
+
+	| cartId aIsbn aQuantity|
+	aIsbn := 'validBook'.
+	aQuantity := 1.
+	cartId :=  interface createCartForId: self validUser withPassword: self validPassword.
+	
+	self should: [interface deletefromCartId: cartId book: aIsbn quantity: aQuantity]
+		raise: Error - MessageNotUnderstood
+			withMessageText: TusLibrosInterface LibroNoExisteEnCarrito .
+	! !
+
+!TusLibrosInterfaceInternaTest methodsFor: 'tests' stamp: 'd b 12/1/2019 18:19:17'!
+test22NoSePuedeRemoverUnaCantidadCeroDeUnLibro
+
+	| cartId aIsbn aQuantity|
+	aIsbn := testObjectsFactory itemSellByTheStore.
+	aQuantity := 0.
+	cartId :=  interface createCartForId: self validUser withPassword: self validPassword.
+	interface addToCartWithId: cartId withISBN: testObjectsFactory itemSellByTheStore withQuantity: 1.
+	self should: [interface deletefromCartId: cartId book: aIsbn quantity: aQuantity]
+		raise: Error - MessageNotUnderstood
+			withMessageText: TusLibrosInterface LibroQuantityError .
+	! !
+
+!TusLibrosInterfaceInternaTest methodsFor: 'tests' stamp: 'd b 12/1/2019 18:25:50'!
+test22NoSePuedeRemoverUnaCantidadNegativaDeUnLibro
+
+	| cartId aIsbn aQuantity|
+	aIsbn := testObjectsFactory itemSellByTheStore.
+	aQuantity := -1.
+	cartId :=  interface createCartForId: self validUser withPassword: self validPassword.
+	interface addToCartWithId: cartId withISBN: testObjectsFactory itemSellByTheStore withQuantity: 1.
+	self should: [interface deletefromCartId: cartId book: aIsbn quantity: aQuantity]
+		raise: Error - MessageNotUnderstood
+			withMessageText: TusLibrosInterface LibroQuantityError .
+	! !
+
+!TusLibrosInterfaceInternaTest methodsFor: 'tests' stamp: 'd b 12/1/2019 18:30:24'!
+test22RemoverLibrosDelCarritoAfectaElListDelCarrito
+
+	| cartId aIsbn aQuantity librosEnCarrito|
+	aIsbn := testObjectsFactory itemSellByTheStore.
+	aQuantity := 1.
+	cartId :=  interface createCartForId: self validUser withPassword: self validPassword.
+	interface addToCartWithId: cartId withISBN: testObjectsFactory itemSellByTheStore withQuantity: 1.
+	interface deletefromCartId: cartId book: aIsbn quantity: aQuantity.
+	
+	librosEnCarrito := (interface listCartWithId: cartId).
+	
+	self assert: 0 equals: librosEnCarrito size.! !
+
 
-!classDefinition: #AuditableItem category: #TusLibros stamp: 'd b 12/1/2019 11:54:55'!
+!classDefinition: #AuditableItem category: #TusLibros stamp: 'd b 12/1/2019 18:30:30'!
 Object subclass: #AuditableItem
 	instanceVariableNames: 'itemId item lastUsed estado'
 	classVariableNames: ''
@@ -790,9 +869,14 @@ initializeWithItemId: aCartId withItem: aCart on: currentTime.
 accept: aVisitor
 	estado accept:aVisitor .! !
 
+
+!AuditableItem methodsFor: 'as yet unclassified' stamp: 'd b 12/1/2019 18:12:14'!
+deleteIsbn: aIsbn quantity: aQuantity 
+	item deleteIsbn: aIsbn quantity: aQuantity! !
+
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'AuditableItem class' category: #TusLibros stamp: 'd b 12/1/2019 11:54:55'!
+!classDefinition: 'AuditableItem class' category: #TusLibros stamp: 'd b 12/1/2019 18:30:30'!
 AuditableItem class
 	instanceVariableNames: ''!
 
@@ -801,7 +885,7 @@ withItemId: aCartId withItem: aCart on: currentTime
 	^self new initializeWithItemId: aCartId withItem: aCart on: currentTime.! !
 
 
-!classDefinition: #ItemCheckouted category: #TusLibros stamp: 'd b 12/1/2019 11:54:55'!
+!classDefinition: #ItemCheckouted category: #TusLibros stamp: 'd b 12/1/2019 18:30:30'!
 AuditableItem subclass: #ItemCheckouted
 	instanceVariableNames: 'auditItem'
 	classVariableNames: ''
@@ -836,7 +920,7 @@ from: anAuditItem
 	auditItem := anAuditItem ! !
 
 
-!classDefinition: #ItemExpired category: #TusLibros stamp: 'd b 12/1/2019 11:54:55'!
+!classDefinition: #ItemExpired category: #TusLibros stamp: 'd b 12/1/2019 18:30:30'!
 AuditableItem subclass: #ItemExpired
 	instanceVariableNames: 'auditItem'
 	classVariableNames: ''
@@ -870,7 +954,7 @@ lastUsed
 	^auditItem lastUsed ! !
 
 
-!classDefinition: #ItemInUse category: #TusLibros stamp: 'd b 12/1/2019 11:54:55'!
+!classDefinition: #ItemInUse category: #TusLibros stamp: 'd b 12/1/2019 18:30:30'!
 AuditableItem subclass: #ItemInUse
 	instanceVariableNames: 'auditItem'
 	classVariableNames: ''
@@ -904,7 +988,7 @@ lastUsed
 	^auditItem lastUsed ! !
 
 
-!classDefinition: #ItemJustCreated category: #TusLibros stamp: 'd b 12/1/2019 11:54:55'!
+!classDefinition: #ItemJustCreated category: #TusLibros stamp: 'd b 12/1/2019 18:30:30'!
 AuditableItem subclass: #ItemJustCreated
 	instanceVariableNames: 'auditItem'
 	classVariableNames: ''
@@ -938,7 +1022,7 @@ lastUsed
 	^auditItem lasUsed ! !
 
 
-!classDefinition: #Cart category: #TusLibros stamp: 'd b 12/1/2019 11:54:55'!
+!classDefinition: #Cart category: #TusLibros stamp: 'd b 12/1/2019 18:30:30'!
 Object subclass: #Cart
 	instanceVariableNames: 'catalog items'
 	classVariableNames: ''
@@ -956,6 +1040,12 @@ invalidQuantityErrorMessage
 	^'Invalid number of items'! !
 
 
+!Cart methodsFor: 'assertions' stamp: 'd b 12/1/2019 18:24:43'!
+assertExistsQuantity: aQuantity ofBooks: aIsbn
+	
+	
+	(self occurrencesOf: aIsbn) >= aQuantity ifFalse: [self error: Cart LibroQuantityError].! !
+
 !Cart methodsFor: 'assertions' stamp: 'HernanWilkinson 6/17/2013 18:06'!
 assertIsValidItem: anItem
 
@@ -965,6 +1055,16 @@ assertIsValidItem: anItem
 assertIsValidQuantity: aQuantity
 
 	aQuantity strictlyPositive ifFalse: [ self error: self invalidQuantityErrorMessage ]! !
+
+!Cart methodsFor: 'assertions' stamp: 'd b 12/1/2019 18:14:53'!
+assertIsbnIsInCart: aIsbn
+	items detect: [:aBookIsbn |  aBookIsbn =aIsbn] ifNone: [self error: Cart LibroNoExisteEnCarrito] ! !
+
+!Cart methodsFor: 'assertions' stamp: 'd b 12/1/2019 18:25:09'!
+assertQuantityIsValid: aQuantity
+	
+	
+	aQuantity > 0 ifFalse: [self error: Cart LibroQuantityError].! !
 
 
 !Cart methodsFor: 'initialization' stamp: 'g j 11/11/2019 17:36:00'!
@@ -1021,9 +1121,17 @@ add: aQuantity of: anItem
 
 	1 to: aQuantity do: [ :aNumber | items add: anItem ]! !
 
+
+!Cart methodsFor: 'removing' stamp: 'd b 12/1/2019 18:25:37'!
+deleteIsbn: aIsbn quantity: aQuantity 
+	self assertIsbnIsInCart: aIsbn.
+	self assertQuantityIsValid: aQuantity.
+	self assertExistsQuantity: aQuantity ofBooks: aIsbn.
+	items remove: aIsbn.! !
+
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'Cart class' category: #TusLibros stamp: 'd b 12/1/2019 11:54:55'!
+!classDefinition: 'Cart class' category: #TusLibros stamp: 'd b 12/1/2019 18:30:30'!
 Cart class
 	instanceVariableNames: ''!
 
@@ -1032,8 +1140,17 @@ acceptingItemsOf: aCatalog
 
 	^self new initializeAcceptingItemsOf: aCatalog! !
 
+
+!Cart class methodsFor: 'as yet unclassified' stamp: 'd b 12/1/2019 18:15:12'!
+LibroNoExisteEnCarrito
+	^'El libro no existe en el carrito'.! !
+
+!Cart class methodsFor: 'as yet unclassified' stamp: 'd b 12/1/2019 18:18:46'!
+LibroQuantityError
+	^'La cantidad de libros que intenta eliminar es incorrecta'! !
+
 
-!classDefinition: #Cashier category: #TusLibros stamp: 'd b 12/1/2019 11:54:55'!
+!classDefinition: #Cashier category: #TusLibros stamp: 'd b 12/1/2019 18:30:30'!
 Object subclass: #Cashier
 	instanceVariableNames: 'cart salesBook merchantProcessor creditCard total userId'
 	classVariableNames: ''
@@ -1090,7 +1207,7 @@ initializeToCheckout: aCart charging: aCreditCard throught: aMerchantProcessor o
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'Cashier class' category: #TusLibros stamp: 'd b 12/1/2019 11:54:55'!
+!classDefinition: 'Cashier class' category: #TusLibros stamp: 'd b 12/1/2019 18:30:30'!
 Cashier class
 	instanceVariableNames: ''!
 
@@ -1130,7 +1247,7 @@ creditCardHasNoCreditErrorMessage
 	^'Credit card has no credit'! !
 
 
-!classDefinition: #ClockSimulator category: #TusLibros stamp: 'd b 12/1/2019 11:54:55'!
+!classDefinition: #ClockSimulator category: #TusLibros stamp: 'd b 12/1/2019 18:30:30'!
 Object subclass: #ClockSimulator
 	instanceVariableNames: 'currentTime'
 	classVariableNames: ''
@@ -1156,7 +1273,7 @@ withDate: aDateTime
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'ClockSimulator class' category: #TusLibros stamp: 'd b 12/1/2019 11:54:55'!
+!classDefinition: 'ClockSimulator class' category: #TusLibros stamp: 'd b 12/1/2019 18:30:30'!
 ClockSimulator class
 	instanceVariableNames: 'date'!
 
@@ -1165,7 +1282,7 @@ withDate: aDateTime
 	^self new withDate: aDateTime.! !
 
 
-!classDefinition: #CreditCard category: #TusLibros stamp: 'd b 12/1/2019 11:54:55'!
+!classDefinition: #CreditCard category: #TusLibros stamp: 'd b 12/1/2019 18:30:30'!
 Object subclass: #CreditCard
 	instanceVariableNames: 'expiration'
 	classVariableNames: ''
@@ -1185,7 +1302,7 @@ initializeExpiringOn: aMonth
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'CreditCard class' category: #TusLibros stamp: 'd b 12/1/2019 11:54:55'!
+!classDefinition: 'CreditCard class' category: #TusLibros stamp: 'd b 12/1/2019 18:30:30'!
 CreditCard class
 	instanceVariableNames: ''!
 
@@ -1195,7 +1312,7 @@ expiringOn: aMonth
 	^self new initializeExpiringOn: aMonth! !
 
 
-!classDefinition: #MerchantProcessor category: #TusLibros stamp: 'd b 12/1/2019 11:54:55'!
+!classDefinition: #MerchantProcessor category: #TusLibros stamp: 'd b 12/1/2019 18:30:30'!
 Object subclass: #MerchantProcessor
 	instanceVariableNames: 'debitBehavior'
 	classVariableNames: ''
@@ -1210,7 +1327,7 @@ debit: anAmount from: aCreditCard
 	! !
 
 
-!classDefinition: #Sale category: #TusLibros stamp: 'd b 12/1/2019 11:54:55'!
+!classDefinition: #Sale category: #TusLibros stamp: 'd b 12/1/2019 18:30:30'!
 Object subclass: #Sale
 	instanceVariableNames: 'total saleItems userId'
 	classVariableNames: ''
@@ -1253,7 +1370,7 @@ initializeOf: anAmount withItemList: aBookList ofUser:aUserId.
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'Sale class' category: #TusLibros stamp: 'd b 12/1/2019 11:54:55'!
+!classDefinition: 'Sale class' category: #TusLibros stamp: 'd b 12/1/2019 18:30:30'!
 Sale class
 	instanceVariableNames: ''!
 
@@ -1264,7 +1381,7 @@ of: anAmount withItemList: aBookList ofUser: aUserId.
 	! !
 
 
-!classDefinition: #StoreTestObjectsFactory category: #TusLibros stamp: 'd b 12/1/2019 11:54:55'!
+!classDefinition: #StoreTestObjectsFactory category: #TusLibros stamp: 'd b 12/1/2019 18:30:30'!
 Object subclass: #StoreTestObjectsFactory
 	instanceVariableNames: 'today'
 	classVariableNames: ''
@@ -1375,7 +1492,7 @@ todayPlus31
 	^ today + (Duration minutes: 31)! !
 
 
-!classDefinition: #TusLibrosInterface category: #TusLibros stamp: 'd b 12/1/2019 11:54:55'!
+!classDefinition: #TusLibrosInterface category: #TusLibros stamp: 'd b 12/1/2019 18:30:30'!
 Object subclass: #TusLibrosInterface
 	instanceVariableNames: 'catalog carts users merchantProcessor salesBook cartsPerClient currentCartId clock usersName'
 	classVariableNames: ''
@@ -1414,11 +1531,10 @@ checkoutWithCartId: aCartId creditCardNumber: aNumber expirationDate: monthOfYea
 	
 	^'OK'.! !
 
-!TusLibrosInterface methodsFor: 'accessing' stamp: 'g j 11/18/2019 16:48:49'!
+!TusLibrosInterface methodsFor: 'accessing' stamp: 'd b 12/1/2019 18:09:13'!
 createCartForId: anUserId withPassword: aString 
 	
 	| newCart nextCartId cartsForActualUser |
-	
 	self assertValidUser: anUserId with: aString .
 	newCart := Cart acceptingItemsOf: catalog.
 	
@@ -1563,9 +1679,20 @@ withCatalog: aCatalog throught: aMerchantProcessor registeringOn: aSalesBook wit
 	salesBook:= aSalesBook.
 	clock := aClock.! !
 
+
+!TusLibrosInterface methodsFor: 'as yet unclassified' stamp: 'd b 12/1/2019 18:11:45'!
+deletefromCartId: aCartId book: aIsbn quantity: aQuantity 
+	| cartToDeleteBook |
+	cartToDeleteBook := carts detect: [:anAuditItem | anAuditItem itemId = aCartId].
+	cartToDeleteBook deleteIsbn: aIsbn quantity: aQuantity.! !
+
+!TusLibrosInterface methodsFor: 'as yet unclassified' stamp: 'd b 12/1/2019 18:09:32'!
+deltefromCartId: aCartId book: aIsbn quantity: aQuantity 
+	! !
+
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'TusLibrosInterface class' category: #TusLibros stamp: 'd b 12/1/2019 11:54:55'!
+!classDefinition: 'TusLibrosInterface class' category: #TusLibros stamp: 'd b 12/1/2019 18:30:30'!
 TusLibrosInterface class
 	instanceVariableNames: ''!
 
@@ -1603,8 +1730,16 @@ CarritoCheckouteado
 CarritoEliminado
 	'Error!! esta intentando usar un carrito eliminado'! !
 
+!TusLibrosInterface class methodsFor: 'as yet unclassified' stamp: 'd b 12/1/2019 18:17:32'!
+LibroNoExisteEnCarrito
+	^Cart LibroNoExisteEnCarrito! !
+
+!TusLibrosInterface class methodsFor: 'as yet unclassified' stamp: 'd b 12/1/2019 18:18:30'!
+LibroQuantityError
+	^Cart LibroQuantityError.! !
+
 
-!classDefinition: #TusLibrosInterfaceExterna category: #TusLibros stamp: 'd b 12/1/2019 11:54:55'!
+!classDefinition: #TusLibrosInterfaceExterna category: #TusLibros stamp: 'd b 12/1/2019 18:30:30'!
 Object subclass: #TusLibrosInterfaceExterna
 	instanceVariableNames: 'port webServer merchantProcessor tusLibrosInterfaceInterna'
 	classVariableNames: ''
@@ -1679,7 +1814,7 @@ checkoutCart
 			res := (tusLibrosInterfaceInterna checkoutWithCartId: cartId creditCardNumber: ccn expirationDate: cced andOwnerName: 'Gonzalo' on: today).
 		].! !
 
-!TusLibrosInterfaceExterna methodsFor: 'services' stamp: 'd b 12/1/2019 11:39:26'!
+!TusLibrosInterfaceExterna methodsFor: 'services' stamp: 'd b 12/1/2019 13:22:54'!
 createCart
 	
 	^self onRouteService: '/createCart' do: [:aReq | 
@@ -1733,6 +1868,6 @@ stringOfDateToMonthOfYearType: textOfDate
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'TusLibrosInterfaceExterna class' category: #TusLibros stamp: 'd b 12/1/2019 11:54:55'!
+!classDefinition: 'TusLibrosInterfaceExterna class' category: #TusLibros stamp: 'd b 12/1/2019 18:30:30'!
 TusLibrosInterfaceExterna class
 	instanceVariableNames: 'webServer port'!

@@ -20,7 +20,8 @@
   <script src="./lib/react-dom.development.js" crossorigin="anonymous"></script>
   <script src="./lib/material-ui.development.js" crossorigin="anonymous"></script>
   <script src="./lib/babel.min.js" crossorigin="anonymous"></script>
-  <script src="./src/refreshbrowser.js" crossorigin="anonymous"></script>
+
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
   <!-- Libraries fallback -->
   <script>window.React || document.write('<script src="https://unpkg.com/react@16.11.0/umd/react.development.js">\x3C/script>')</script>
@@ -120,6 +121,13 @@
         }
       })
     }
+    axios.defaults.headers.get['Content-Type'] = 'application/json; charset=utf-8';
+    axios.defaults.headers.get['Access-Control-Allow-Origin'] = '*';
+    const port = 8014
+    const getLocalAsJsonUsingAxios = (path) => {
+      
+      return axios.get(`http://localhost:${port}/${path}`)
+    }
 
     class CreateCartComponent extends React.Component {
       constructor(props) {
@@ -141,7 +149,7 @@
         } = this.state
         console.log(this.state.clientId)
         console.log(this.state.password)
-        getLocalAsJson(`createCart/?clientId=${clientId}&password${password}`)
+        getLocalAsJson(`createCart/?clientId=${clientId}&password=${password}`)
           .then(function (response) {
             return response.json()
           })
@@ -152,7 +160,16 @@
             console.log('Looks like there was a problem: \n', error);
           });
       }
-
+      handleClient(event) {
+        this.setState({
+          clientId: event.target.value
+        })
+      };
+      handlePass(event) {
+        this.setState({
+          password: event.target.value
+        })
+      };      
       render(){
         const {
           router
@@ -165,8 +182,8 @@
         return(
           <div>
             
-              <TextField id="clientId" label="Client ID" variant="outlined" />
-              <TextField id="password" type="password" label="Password" variant="outlined" />
+              <TextField id="clientId" onChange={ev=>this.handleClient(ev)} value={clientId} label="Client ID" variant="outlined" />
+              <TextField id="password" onChange={ev=>this.handlePass(ev)} value={password} type="password" label="Password" variant="outlined" />
               <Button onClick={ev=>this.handleSend(ev)} variant="contained" color="primary">
                 Crear!
               </Button>
@@ -488,8 +505,7 @@
       }
     
       render() {
-        let title = "Substrings Finder 6000"
-        let content = "Where am I?"
+        let title = "Tus Libros App"
         const router = {
           current: () => this.state.path,
           navigate: (path, state) => {
