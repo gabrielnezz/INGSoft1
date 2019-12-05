@@ -1,4 +1,4 @@
-!classDefinition: #CartTest category: #TusLibros stamp: 'd b 12/1/2019 18:30:30'!
+!classDefinition: #CartTest category: #TusLibros!
 TestCase subclass: #CartTest
 	instanceVariableNames: 'testObjectsFactory'
 	classVariableNames: ''
@@ -98,7 +98,7 @@ setUp
 	testObjectsFactory := StoreTestObjectsFactory new.! !
 
 
-!classDefinition: #CashierTest category: #TusLibros stamp: 'd b 12/1/2019 18:30:30'!
+!classDefinition: #CashierTest category: #TusLibros!
 TestCase subclass: #CashierTest
 	instanceVariableNames: 'testObjectsFactory debitBehavior'
 	classVariableNames: ''
@@ -251,7 +251,7 @@ debit: anAmount from: aCreditCard
 	^debitBehavior value: anAmount value: aCreditCard ! !
 
 
-!classDefinition: #TusLibrosInterfaceInternaTest category: #TusLibros stamp: 'd b 12/1/2019 18:30:30'!
+!classDefinition: #TusLibrosInterfaceInternaTest category: #TusLibros!
 TestCase subclass: #TusLibrosInterfaceInternaTest
 	instanceVariableNames: 'testObjectsFactory debitBehavior salesBook interface clock'
 	classVariableNames: ''
@@ -270,14 +270,14 @@ anotherValidUser
 	
 	! !
 
-!TusLibrosInterfaceInternaTest methodsFor: 'setUp' stamp: 'g j 11/18/2019 12:57:35'!
+!TusLibrosInterfaceInternaTest methodsFor: 'setUp' stamp: 'g j 12/4/2019 21:58:27'!
 setUp 
 
 	testObjectsFactory := StoreTestObjectsFactory new.
 	debitBehavior := [ :anAmount :aCreditCard | ].
 	salesBook := OrderedCollection new.
 	clock := ClockSimulator withDate: DateAndTime now.
-	interface := TusLibrosInterface withCatalog: testObjectsFactory defaultCatalog throught: self registeringOn: salesBook withClock: clock.! !
+	interface := TusLibrosInterface withCatalog: testObjectsFactory defaultCatalog throught: self registeringOn: salesBook withUsers: testObjectsFactory defaultUsers withClock: clock.! !
 
 !TusLibrosInterfaceInternaTest methodsFor: 'setUp' stamp: 'd b 11/30/2019 11:10:21'!
 validPassword
@@ -813,7 +813,7 @@ test22RemoverLibrosDelCarritoAfectaElListDelCarrito
 	self assert: 0 equals: librosEnCarrito size.! !
 
 
-!classDefinition: #AuditableItem category: #TusLibros stamp: 'd b 12/1/2019 18:30:30'!
+!classDefinition: #AuditableItem category: #TusLibros!
 Object subclass: #AuditableItem
 	instanceVariableNames: 'itemId item lastUsed estado'
 	classVariableNames: ''
@@ -876,7 +876,7 @@ deleteIsbn: aIsbn quantity: aQuantity
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'AuditableItem class' category: #TusLibros stamp: 'd b 12/1/2019 18:30:30'!
+!classDefinition: 'AuditableItem class' category: #TusLibros!
 AuditableItem class
 	instanceVariableNames: ''!
 
@@ -885,7 +885,7 @@ withItemId: aCartId withItem: aCart on: currentTime
 	^self new initializeWithItemId: aCartId withItem: aCart on: currentTime.! !
 
 
-!classDefinition: #ItemCheckouted category: #TusLibros stamp: 'd b 12/1/2019 18:30:30'!
+!classDefinition: #ItemCheckouted category: #TusLibros!
 AuditableItem subclass: #ItemCheckouted
 	instanceVariableNames: 'auditItem'
 	classVariableNames: ''
@@ -920,7 +920,7 @@ from: anAuditItem
 	auditItem := anAuditItem ! !
 
 
-!classDefinition: #ItemExpired category: #TusLibros stamp: 'd b 12/1/2019 18:30:30'!
+!classDefinition: #ItemExpired category: #TusLibros!
 AuditableItem subclass: #ItemExpired
 	instanceVariableNames: 'auditItem'
 	classVariableNames: ''
@@ -954,7 +954,7 @@ lastUsed
 	^auditItem lastUsed ! !
 
 
-!classDefinition: #ItemInUse category: #TusLibros stamp: 'd b 12/1/2019 18:30:30'!
+!classDefinition: #ItemInUse category: #TusLibros!
 AuditableItem subclass: #ItemInUse
 	instanceVariableNames: 'auditItem'
 	classVariableNames: ''
@@ -988,7 +988,7 @@ lastUsed
 	^auditItem lastUsed ! !
 
 
-!classDefinition: #ItemJustCreated category: #TusLibros stamp: 'd b 12/1/2019 18:30:30'!
+!classDefinition: #ItemJustCreated category: #TusLibros!
 AuditableItem subclass: #ItemJustCreated
 	instanceVariableNames: 'auditItem'
 	classVariableNames: ''
@@ -1022,7 +1022,7 @@ lastUsed
 	^auditItem lasUsed ! !
 
 
-!classDefinition: #Cart category: #TusLibros stamp: 'd b 12/1/2019 18:30:30'!
+!classDefinition: #Cart category: #TusLibros!
 Object subclass: #Cart
 	instanceVariableNames: 'catalog items'
 	classVariableNames: ''
@@ -1131,7 +1131,7 @@ deleteIsbn: aIsbn quantity: aQuantity
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'Cart class' category: #TusLibros stamp: 'd b 12/1/2019 18:30:30'!
+!classDefinition: 'Cart class' category: #TusLibros!
 Cart class
 	instanceVariableNames: ''!
 
@@ -1150,7 +1150,7 @@ LibroQuantityError
 	^'La cantidad de libros que intenta eliminar es incorrecta'! !
 
 
-!classDefinition: #Cashier category: #TusLibros stamp: 'd b 12/1/2019 18:30:30'!
+!classDefinition: #Cashier category: #TusLibros!
 Object subclass: #Cashier
 	instanceVariableNames: 'cart salesBook merchantProcessor creditCard total userId'
 	classVariableNames: ''
@@ -1207,7 +1207,7 @@ initializeToCheckout: aCart charging: aCreditCard throught: aMerchantProcessor o
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'Cashier class' category: #TusLibros stamp: 'd b 12/1/2019 18:30:30'!
+!classDefinition: 'Cashier class' category: #TusLibros!
 Cashier class
 	instanceVariableNames: ''!
 
@@ -1247,7 +1247,7 @@ creditCardHasNoCreditErrorMessage
 	^'Credit card has no credit'! !
 
 
-!classDefinition: #ClockSimulator category: #TusLibros stamp: 'd b 12/1/2019 18:30:30'!
+!classDefinition: #ClockSimulator category: #TusLibros!
 Object subclass: #ClockSimulator
 	instanceVariableNames: 'currentTime'
 	classVariableNames: ''
@@ -1273,7 +1273,7 @@ withDate: aDateTime
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'ClockSimulator class' category: #TusLibros stamp: 'd b 12/1/2019 18:30:30'!
+!classDefinition: 'ClockSimulator class' category: #TusLibros!
 ClockSimulator class
 	instanceVariableNames: 'date'!
 
@@ -1282,7 +1282,7 @@ withDate: aDateTime
 	^self new withDate: aDateTime.! !
 
 
-!classDefinition: #CreditCard category: #TusLibros stamp: 'd b 12/1/2019 18:30:30'!
+!classDefinition: #CreditCard category: #TusLibros!
 Object subclass: #CreditCard
 	instanceVariableNames: 'expiration'
 	classVariableNames: ''
@@ -1302,7 +1302,7 @@ initializeExpiringOn: aMonth
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'CreditCard class' category: #TusLibros stamp: 'd b 12/1/2019 18:30:30'!
+!classDefinition: 'CreditCard class' category: #TusLibros!
 CreditCard class
 	instanceVariableNames: ''!
 
@@ -1312,7 +1312,7 @@ expiringOn: aMonth
 	^self new initializeExpiringOn: aMonth! !
 
 
-!classDefinition: #MerchantProcessor category: #TusLibros stamp: 'd b 12/1/2019 18:30:30'!
+!classDefinition: #MerchantProcessor category: #TusLibros!
 Object subclass: #MerchantProcessor
 	instanceVariableNames: 'debitBehavior'
 	classVariableNames: ''
@@ -1327,7 +1327,7 @@ debit: anAmount from: aCreditCard
 	! !
 
 
-!classDefinition: #Sale category: #TusLibros stamp: 'd b 12/1/2019 18:30:30'!
+!classDefinition: #Sale category: #TusLibros!
 Object subclass: #Sale
 	instanceVariableNames: 'total saleItems userId'
 	classVariableNames: ''
@@ -1370,7 +1370,7 @@ initializeOf: anAmount withItemList: aBookList ofUser:aUserId.
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'Sale class' category: #TusLibros stamp: 'd b 12/1/2019 18:30:30'!
+!classDefinition: 'Sale class' category: #TusLibros!
 Sale class
 	instanceVariableNames: ''!
 
@@ -1381,7 +1381,7 @@ of: anAmount withItemList: aBookList ofUser: aUserId.
 	! !
 
 
-!classDefinition: #StoreTestObjectsFactory category: #TusLibros stamp: 'd b 12/1/2019 18:30:30'!
+!classDefinition: #StoreTestObjectsFactory category: #TusLibros!
 Object subclass: #StoreTestObjectsFactory
 	instanceVariableNames: 'today'
 	classVariableNames: ''
@@ -1453,6 +1453,14 @@ defaultCatalog
 		at: self anotherItemSellByTheStore put: self anotherItemSellByTheStorePrice;
 		yourself ! !
 
+!StoreTestObjectsFactory methodsFor: 'cart' stamp: 'g j 12/4/2019 22:00:07'!
+defaultUsers
+	
+	^Dictionary new
+		at: self validUser put: self validPassword;
+		at: self anotherValidUser put: self anotherValidPassword;
+		yourself ! !
+
 
 !StoreTestObjectsFactory methodsFor: 'credit card' stamp: 'HernanWilkinson 6/17/2013 18:37'!
 expiredCreditCard
@@ -1492,7 +1500,7 @@ todayPlus31
 	^ today + (Duration minutes: 31)! !
 
 
-!classDefinition: #TusLibrosInterface category: #TusLibros stamp: 'd b 12/1/2019 18:30:30'!
+!classDefinition: #TusLibrosInterface category: #TusLibros!
 Object subclass: #TusLibrosInterface
 	instanceVariableNames: 'catalog carts users merchantProcessor salesBook cartsPerClient currentCartId clock usersName'
 	classVariableNames: ''
@@ -1662,15 +1670,13 @@ visitItemJustCreated
 	^true! !
 
 
-!TusLibrosInterface methodsFor: 'initialization' stamp: 'd b 11/30/2019 11:05:49'!
-withCatalog: aCatalog throught: aMerchantProcessor registeringOn: aSalesBook withClock: aClock.
+!TusLibrosInterface methodsFor: 'initialization' stamp: 'g j 12/4/2019 21:55:47'!
+initializeWithCatalog: aCatalog throught: aMerchantProcessor registeringOn: aSalesBook withUsers: usersData withClock: aClock.
 	catalog := aCatalog.
 	merchantProcessor := aMerchantProcessor.
 	carts := OrderedCollection new.
-	users := Dictionary new.
+	users := usersData.
 	usersName := Dictionary new.
-	users add: 1->'gabipass'.
-	users add: 2->'diegopass'.
 	usersName at: 'diego' put: 2.
 	usersName at: 'gabi' put: 1.
 	salesBook := OrderedCollection new.
@@ -1692,7 +1698,7 @@ deltefromCartId: aCartId book: aIsbn quantity: aQuantity
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'TusLibrosInterface class' category: #TusLibros stamp: 'd b 12/1/2019 18:30:30'!
+!classDefinition: 'TusLibrosInterface class' category: #TusLibros!
 TusLibrosInterface class
 	instanceVariableNames: ''!
 
@@ -1717,9 +1723,9 @@ usuarioInvalido
 	^'Usuario invalido'! !
 
 
-!TusLibrosInterface class methodsFor: 'instance creation' stamp: 'd b 11/17/2019 16:54:44'!
-withCatalog: aCatalog throught: aMerchantProcessor registeringOn: salesBook withClock: aClock.
-	^self new withCatalog: aCatalog throught: aMerchantProcessor registeringOn: salesBook withClock: aClock.! !
+!TusLibrosInterface class methodsFor: 'instance creation' stamp: 'g j 12/4/2019 21:54:30'!
+withCatalog: aCatalog throught: aMerchantProcessor registeringOn: salesBook withUsers: usersData withClock: aClock.
+	^self new initializeWithCatalog: aCatalog throught: aMerchantProcessor registeringOn: salesBook withUsers: usersData withClock: aClock.! !
 
 
 !TusLibrosInterface class methodsFor: 'as yet unclassified' stamp: 'd b 11/30/2019 13:16:50'!
@@ -1739,16 +1745,16 @@ LibroQuantityError
 	^Cart LibroQuantityError.! !
 
 
-!classDefinition: #TusLibrosInterfaceExterna category: #TusLibros stamp: 'd b 12/1/2019 18:30:30'!
+!classDefinition: #TusLibrosInterfaceExterna category: #TusLibros!
 Object subclass: #TusLibrosInterfaceExterna
 	instanceVariableNames: 'port webServer merchantProcessor tusLibrosInterfaceInterna'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'TusLibros'!
 
-!TusLibrosInterfaceExterna methodsFor: 'initialization' stamp: 'd b 12/1/2019 11:40:31'!
-initializeWithCatalog: aCatalog throught: aMerchantProcessor registeringOn: salesBook withClock: aClock andPort: aPort
-	tusLibrosInterfaceInterna := TusLibrosInterface withCatalog: aCatalog throught: aMerchantProcessor registeringOn: salesBook withClock: aClock.
+!TusLibrosInterfaceExterna methodsFor: 'initialization' stamp: 'g j 12/4/2019 22:01:07'!
+initializeWithCatalog: aCatalog throught: aMerchantProcessor registeringOn: salesBook usersFrom: usersData withClock: aClock andPort: aPort
+	tusLibrosInterfaceInterna := TusLibrosInterface withCatalog: aCatalog throught: aMerchantProcessor registeringOn: salesBook withUsers: usersData withClock: aClock.
 	port := aPort .
 	webServer := WebServer new listenOn: aPort.
 	merchantProcessor := aMerchantProcessor .
@@ -1868,6 +1874,11 @@ stringOfDateToMonthOfYearType: textOfDate
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'TusLibrosInterfaceExterna class' category: #TusLibros stamp: 'd b 12/1/2019 18:30:30'!
+!classDefinition: 'TusLibrosInterfaceExterna class' category: #TusLibros!
 TusLibrosInterfaceExterna class
 	instanceVariableNames: 'webServer port'!
+
+!TusLibrosInterfaceExterna class methodsFor: 'instance creation' stamp: 'g j 12/4/2019 22:02:20'!
+withCatalog: aCatalog throught: aMerchantProcessor registeringOn: salesBook usersFrom: usersData withClock: aClock andPort: aPort
+
+	^self new initializeWithCatalog: aCatalog throught: aMerchantProcessor registeringOn: salesBook usersFrom: usersData withClock: aClock andPort: aPort.! !
